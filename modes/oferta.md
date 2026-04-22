@@ -1,216 +1,179 @@
-# Modo: oferta — Evaluación Completa A-G
+# Mode: oferta — Full Evaluation A-G
 
-Cuando el candidato pega una oferta (texto o URL), entregar SIEMPRE los 7 bloques (A-F evaluation + G legitimacy):
+When the candidate pastes an offer (text or URL), ALWAYS deliver all 7 blocks (A-F evaluation + G legitimacy).
 
-## Paso 0 — Detección de Arquetipo
+**IMPORTANT: Write all output in English.**
 
-Clasificar la oferta en uno de los 6 arquetipos (ver `_shared.md`). Si es híbrido, indicar los 2 más cercanos. Esto determina:
-- Qué proof points priorizar en bloque B
-- Cómo reescribir el summary en bloque E
-- Qué historias STAR preparar en bloque F
+## Step 0 — Archetype Detection
 
-## Bloque A — Resumen del Rol
+Classify the offer into one of the archetypes (see `_shared.md`). If hybrid, indicate the 2 closest. This determines:
+- Which proof points to prioritize in Block B
+- How to rewrite the summary in Block E
+- Which STAR stories to prepare in Block F
 
-Tabla con:
-- Arquetipo detectado
+## Block A — Role Summary
+
+Table with:
+- Detected archetype
 - Domain (platform/agentic/LLMOps/ML/enterprise)
 - Function (build/consult/manage/deploy)
 - Seniority
 - Remote (full/hybrid/onsite)
-- Team size (si se menciona)
-- TL;DR en 1 frase
+- Team size (if mentioned)
+- TL;DR in 1 sentence
 
-## Bloque B — Match con CV
+## Block B — CV Match
 
-Lee `cv.md`. Crea tabla con cada requisito del JD mapeado a líneas exactas del CV.
+Read `cv.md`. Create table with each JD requirement mapped to exact lines from the CV.
 
-**Adaptado al arquetipo:**
-- Si FDE → priorizar proof points de delivery rápida y client-facing
-- Si SA → priorizar diseño de sistemas e integrations
-- Si PM → priorizar product discovery y métricas
-- Si LLMOps → priorizar evals, observability, pipelines
-- Si Agentic → priorizar multi-agent, HITL, orchestration
-- Si Transformation → priorizar change management, adoption, scaling
+**Adapted to archetype:**
+- FDE → prioritize fast delivery and client-facing proof points
+- SA → prioritize system design and integrations
+- PM → prioritize product discovery and metrics
+- LLMOps → prioritize evals, observability, pipelines
+- Agentic → prioritize multi-agent, HITL, orchestration
+- Transformation → prioritize change management, adoption, scaling
 
-Sección de **gaps** con estrategia de mitigación para cada uno. Para cada gap:
-1. ¿Es un hard blocker o un nice-to-have?
-2. ¿Puede el candidato demostrar experiencia adyacente?
-3. ¿Hay un proyecto portfolio que cubra este gap?
-4. Plan de mitigación concreto (frase para cover letter, proyecto rápido, etc.)
+**Gaps section** with mitigation strategy for each. For each gap:
+1. Is it a hard blocker or a nice-to-have?
+2. Can the candidate demonstrate adjacent experience?
+3. Is there a portfolio project that covers this gap?
+4. Concrete mitigation plan (cover letter phrasing, quick project, etc.)
 
-## Bloque C — Nivel y Estrategia
+## Block C — Level and Strategy
 
-1. **Nivel detectado** en el JD vs **nivel natural del candidato para ese arquetipo**
-2. **Plan "vender senior sin mentir"**: frases específicas adaptadas al arquetipo, logros concretos a destacar, cómo posicionar la experiencia de founder como ventaja
-3. **Plan "si me downlevelan"**: aceptar si comp es justa, negociar review a 6 meses, criterios de promoción claros
+1. **Detected level** in the JD vs **candidate's natural level for that archetype**
+2. **"Sell senior without lying" plan**: specific phrases adapted to the archetype, concrete achievements to highlight, how to position experience as advantage
+3. **"If they downlevel me" plan**: accept if comp is fair, negotiate 6-month review, clear promotion criteria
 
-## Bloque D — Comp y Demanda
+## Block D — Comp and Demand
 
-Usar WebSearch para:
-- Salarios actuales del rol (Glassdoor, Levels.fyi, Blind)
-- Reputación de compensación de la empresa
-- Tendencia de demanda del rol
+Use WebSearch for:
+- Current salaries for the role (Glassdoor, Levels.fyi, Blind, or local equivalents)
+- Company's compensation reputation
+- Role demand trend
 
-Tabla con datos y fuentes citadas. Si no hay datos, decirlo en vez de inventar.
+Table with data and cited sources. If no data available, say so instead of making it up.
 
-## Bloque E — Plan de Personalización
+## Block E — CV Personalization Plan
 
-| # | Sección | Estado actual | Cambio propuesto | Por qué |
-|---|---------|---------------|------------------|---------|
+| # | Section | Current state | Proposed change | Why |
+|---|---------|---------------|-----------------|-----|
 | 1 | Summary | ... | ... | ... |
 | ... | ... | ... | ... | ... |
 
-Top 5 cambios al CV + Top 5 cambios a LinkedIn para maximizar match.
+Top 5 CV changes + Top 5 LinkedIn changes to maximize match.
 
-## Bloque F — Plan de Entrevistas
+## Block F — Interview Prep Plan
 
-6-10 historias STAR+R mapeadas a requisitos del JD (STAR + **Reflection**):
+6-10 STAR+R stories mapped to JD requirements (STAR + **Reflection**):
 
-| # | Requisito del JD | Historia STAR+R | S | T | A | R | Reflection |
-|---|-----------------|-----------------|---|---|---|---|------------|
+| # | JD Requirement | STAR+R Story | S | T | A | R | Reflection |
+|---|----------------|--------------|---|---|---|---|------------|
 
 The **Reflection** column captures what was learned or what would be done differently. This signals seniority — junior candidates describe what happened, senior candidates extract lessons.
 
 **Story Bank:** If `interview-prep/story-bank.md` exists, check if any of these stories are already there. If not, append new ones. Over time this builds a reusable bank of 5-10 master stories that can be adapted to any interview question.
 
-**Seleccionadas y enmarcadas según el arquetipo:**
-- FDE → enfatizar velocidad de entrega y client-facing
-- SA → enfatizar decisiones de arquitectura
-- PM → enfatizar discovery y trade-offs
-- LLMOps → enfatizar métricas, evals, production hardening
-- Agentic → enfatizar orchestration, error handling, HITL
-- Transformation → enfatizar adopción, cambio organizacional
+**Selected and framed per archetype:**
+- FDE → emphasize delivery speed and client-facing
+- SA → emphasize architecture decisions
+- PM → emphasize discovery and trade-offs
+- LLMOps → emphasize metrics, evals, production hardening
+- Agentic → emphasize orchestration, error handling, HITL
+- Transformation → emphasize adoption, organizational change
 
-Incluir también:
-- 1 case study recomendado (cuál de sus proyectos presentar y cómo)
-- Preguntas red-flag y cómo responderlas (ej: "¿por qué vendiste tu empresa?", "¿tienes equipo de reports?")
+Also include:
+- 1 recommended case study (which project to present and how to frame it)
+- Red-flag questions and how to answer them
 
-## Bloque G — Posting Legitimacy
+## Block G — Posting Legitimacy
 
-Analyze the job posting for signals that indicate whether this is a real, active opening. This helps the user prioritize their effort on opportunities most likely to result in a hiring process.
+Analyze the job posting for signals that indicate whether this is a real, active opening.
 
 **Ethical framing:** Present observations, not accusations. Every signal has legitimate explanations. The user decides how to weigh them.
 
 ### Signals to analyze (in order):
 
-**1. Posting Freshness** (from Playwright snapshot, already captured in Paso 0):
-- Date posted or "X days ago" -- extract from page
+**1. Posting Freshness:**
+- Date posted or "X days ago" — extract from page
 - Apply button state (active / closed / missing / redirects to generic page)
-- If URL redirected to generic careers page, note it
 
-**2. Description Quality** (from JD text):
+**2. Description Quality:**
 - Does it name specific technologies, frameworks, tools?
 - Does it mention team size, reporting structure, or org context?
-- Are requirements realistic? (years of experience vs technology age)
-- Is there a clear scope for the first 6-12 months?
+- Are requirements realistic?
 - Is salary/compensation mentioned?
-- What ratio of the JD is role-specific vs generic boilerplate?
-- Any internal contradictions? (entry-level title + staff requirements, etc.)
+- Any internal contradictions?
 
-**3. Company Hiring Signals** (2-3 WebSearch queries, combine with Block D research):
-- Search: `"{company}" layoffs {year}` -- note date, scale, departments
-- Search: `"{company}" hiring freeze {year}` -- note any announcements
-- If layoffs found: are they in the same department as this role?
+**3. Company Hiring Signals** (2-3 WebSearch queries):
+- Search: `"{company}" layoffs {year}`
+- Search: `"{company}" hiring freeze {year}`
 
-**4. Reposting Detection** (from scan-history.tsv):
-- Check if company + similar role title appeared before with a different URL
-- Note how many times and over what period
+**4. Reposting Detection:** Check if company + similar role appeared before with a different URL.
 
-**5. Role Market Context** (qualitative, no additional queries):
-- Is this a common role that typically fills in 4-6 weeks?
-- Does the role make sense for this company's business?
-- Is the seniority level one that legitimately takes longer to fill?
+**5. Role Market Context:** Does the role make sense for this company's business?
 
 ### Output format:
 
 **Assessment:** One of three tiers:
-- **High Confidence** -- Multiple signals suggest a real, active opening
-- **Proceed with Caution** -- Mixed signals worth noting
-- **Suspicious** -- Multiple ghost job indicators, investigate before investing time
+- **High Confidence** — Multiple signals suggest a real, active opening
+- **Proceed with Caution** — Mixed signals worth noting
+- **Suspicious** — Multiple ghost job indicators, investigate before investing time
 
-**Signals table:** Each signal observed with its finding and weight (Positive / Neutral / Concerning).
-
-**Context Notes:** Any caveats (niche role, government job, evergreen position, etc.) that explain potentially concerning signals.
+**Signals table:** Each signal with its finding and weight (Positive / Neutral / Concerning).
 
 ### Edge case handling:
-- **Government/academic postings:** Longer timelines are standard. Adjust thresholds (60-90 days is normal).
-- **Evergreen/continuous hire postings:** If the JD explicitly says "ongoing" or "rolling," note it as context -- this is not a ghost job, it is a pipeline role.
-- **Niche/executive roles:** Staff+, VP, Director, or highly specialized roles legitimately stay open for months. Adjust age thresholds accordingly.
-- **Startup / pre-revenue:** Early-stage companies may have vague JDs because the role is genuinely undefined. Weight description vagueness less heavily.
-- **No date available:** If posting age cannot be determined and no other signals are concerning, default to "Proceed with Caution" with a note that limited data was available. NEVER default to "Suspicious" without evidence.
-- **Recruiter-sourced (no public posting):** Freshness signals unavailable. Note that active recruiter contact is itself a positive legitimacy signal.
+- **Government/academic postings:** 60-90 day timelines are normal.
+- **Evergreen postings:** Note "ongoing" or "rolling" as context, not a ghost job.
+- **Niche/executive roles:** Staff+, VP, Director legitimately stay open for months.
+- **No date available:** Default to "Proceed with Caution." NEVER default to "Suspicious" without evidence.
+- **Recruiter-sourced:** Active recruiter contact is itself a positive legitimacy signal.
 
 ---
 
-## Post-evaluación
+## Post-evaluation
 
-**SIEMPRE** después de generar los bloques A-G:
+**ALWAYS** after generating blocks A-G:
 
-### 1. Guardar report .md
+### 1. Save report .md
 
-Guardar evaluación completa en `reports/{###}-{company-slug}-{YYYY-MM-DD}.md`.
+Save full evaluation to `reports/{###}-{company-slug}-{YYYY-MM-DD}.md`.
 
-- `{###}` = siguiente número secuencial (3 dígitos, zero-padded)
-- `{company-slug}` = nombre de empresa en lowercase, sin espacios (usar guiones)
-- `{YYYY-MM-DD}` = fecha actual
+- `{###}` = next sequential number (3 digits, zero-padded)
+- `{company-slug}` = company name lowercase, hyphens for spaces
+- `{YYYY-MM-DD}` = current date
 
-**Formato del report:**
+**Report format:**
 
 ```markdown
-# Evaluación: {Empresa} — {Rol}
+# Evaluation: {Company} — {Role}
 
-**Fecha:** {YYYY-MM-DD}
-**Arquetipo:** {detectado}
+**Date:** {YYYY-MM-DD}
+**Archetype:** {detected}
 **Score:** {X/5}
 **Legitimacy:** {High Confidence | Proceed with Caution | Suspicious}
-**PDF:** {ruta o pendiente}
+**PDF:** {path or pending}
 
 ---
 
-## A) Resumen del Rol
-(contenido completo del bloque A)
-
-## B) Match con CV
-(contenido completo del bloque B)
-
-## C) Nivel y Estrategia
-(contenido completo del bloque C)
-
-## D) Comp y Demanda
-(contenido completo del bloque D)
-
-## E) Plan de Personalización
-(contenido completo del bloque E)
-
-## F) Plan de Entrevistas
-(contenido completo del bloque F)
-
+## A) Role Summary
+## B) CV Match
+## C) Level and Strategy
+## D) Comp and Demand
+## E) CV Personalization Plan
+## F) Interview Prep Plan
 ## G) Posting Legitimacy
-(contenido completo del bloque G)
-
-## H) Draft Application Answers
-(solo si score >= 4.5 — borradores de respuestas para el formulario de aplicación)
+## H) Draft Application Answers (only if score >= 4.5)
 
 ---
 
-## Keywords extraídas
-(lista de 15-20 keywords del JD para ATS optimization)
+## Extracted Keywords
+(15-20 keywords from the JD for ATS optimization)
 ```
 
-### 2. Registrar en tracker
+### 2. Register in tracker
 
-**SIEMPRE** registrar en `data/applications.md`:
-- Siguiente número secuencial
-- Fecha actual
-- Empresa
-- Rol
-- Score: promedio de match (1-5)
-- Estado: `Evaluada`
-- PDF: ❌ (o ✅ si auto-pipeline generó PDF)
-- Report: link relativo al report .md (ej: `[001](reports/001-company-2026-01-01.md)`)
+**ALWAYS** register in `data/applications.md`:
 
-**Formato del tracker:**
-
-```markdown
-| # | Fecha | Empresa | Rol | Score | Estado | PDF | Report |
-```
+| # | Date | Company | Role | Score | Status | PDF | Report |

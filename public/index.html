@@ -75,6 +75,8 @@
       white-space: nowrap;
     }
     .btn-small:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-small.danger:hover { border-color: var(--red); color: var(--red); }
+    .btn-small:disabled { opacity: 0.3; pointer-events: none; }
 
     /* Modal */
     .modal-backdrop {
@@ -113,7 +115,7 @@
     main {
       flex: 1;
       display: grid;
-      grid-template-columns: 380px 1fr;
+      grid-template-columns: 380px 220px 1fr;
       gap: 0;
       height: calc(100vh - 57px);
     }
@@ -175,6 +177,22 @@
 
     .hint { font-size: 10px; color: var(--muted); margin-top: 4px; }
 
+    .cv-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; margin-top: 14px; }
+    .cv-label-row label { margin: 0; }
+    .upload-btn {
+      font-size: 10px;
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 2px 8px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .upload-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .upload-btn.loading { opacity: 0.5; pointer-events: none; }
+
     button.run {
       width: 100%;
       margin-top: 18px;
@@ -191,6 +209,33 @@
     }
     button.run:hover { opacity: 0.85; }
     button.run:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Reports panel */
+    .reports-panel {
+      padding: 16px;
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .report-item {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+      background: none;
+      text-align: left;
+      width: 100%;
+      font-family: inherit;
+      color: var(--text);
+    }
+    .report-item:hover { border-color: var(--accent); }
+    .report-item.active { border-color: var(--accent); background: rgba(124,106,247,0.08); }
+    .report-name { font-size: 10px; color: var(--muted); word-break: break-all; line-height: 1.4; }
+    .report-meta { font-size: 10px; color: var(--accent); margin-top: 3px; }
+    .no-reports { font-size: 10px; color: var(--muted); font-style: italic; }
 
     /* Output panel */
     .output-panel {
@@ -305,6 +350,8 @@
         <option value="">— Ad-hoc (no client) —</option>
       </select>
       <button class="btn-small" id="new-client-btn" type="button">+ New</button>
+      <button class="btn-small" id="edit-client-btn" type="button" disabled>Edit</button>
+      <button class="btn-small danger" id="delete-client-btn" type="button" disabled>Delete</button>
     </div>
 
     <div class="panel-label">Mode</div>
@@ -315,8 +362,11 @@
     </div>
 
     <div id="fields-evaluate">
-      <label>Candidate CV (paste markdown or plain text)</label>
-      <textarea id="cv-input" placeholder="Paste CV here, or pick a client above..."></textarea>
+      <div class="cv-label-row">
+        <label>Candidate CV</label>
+        <button class="upload-btn" type="button" onclick="triggerPdfUpload('cv-input', this)">upload PDF</button>
+      </div>
+      <textarea id="cv-input" placeholder="Paste CV here, or pick a client above…"></textarea>
 
       <label>Company (optional — used to name the report file)</label>
       <input type="text" id="company-eval" placeholder="e.g. Stripe" />
@@ -326,16 +376,22 @@
     </div>
 
     <div id="fields-compare" style="display:none">
-      <label>Your CV</label>
-      <textarea id="cv-compare" placeholder="Paste your CV here..."></textarea>
+      <div class="cv-label-row">
+        <label>Your CV</label>
+        <button class="upload-btn" type="button" onclick="triggerPdfUpload('cv-compare', this)">upload PDF</button>
+      </div>
+      <textarea id="cv-compare" placeholder="Paste your CV here…"></textarea>
 
       <label>Job Descriptions (separate each JD with --- on its own line)</label>
       <textarea id="jds-compare" style="min-height:200px" placeholder="--- JD 1 ---&#10;Paste first JD here...&#10;&#10;--- JD 2 ---&#10;Paste second JD here..."></textarea>
     </div>
 
     <div id="fields-interview" style="display:none">
-      <label>Your CV</label>
-      <textarea id="cv-interview" placeholder="Paste your CV here..."></textarea>
+      <div class="cv-label-row">
+        <label>Your CV</label>
+        <button class="upload-btn" type="button" onclick="triggerPdfUpload('cv-interview', this)">upload PDF</button>
+      </div>
+      <textarea id="cv-interview" placeholder="Paste your CV here…"></textarea>
 
       <div class="row">
         <div>
@@ -355,6 +411,12 @@
     <button class="run" id="run-btn">Run →</button>
   </div>
 
+  <!-- Reports panel -->
+  <div class="reports-panel">
+    <div class="panel-label">Reports</div>
+    <div id="reports-list"><span class="no-reports">Select a client</span></div>
+  </div>
+
   <!-- New Client modal -->
   <div class="modal-backdrop" id="new-client-modal">
     <div class="modal">
@@ -362,8 +424,11 @@
       <label>Name *</label>
       <input type="text" id="nc-name" placeholder="e.g. Budi Surya" />
 
-      <label>CV (markdown or plain text) *</label>
-      <textarea id="nc-cv" style="min-height: 160px" placeholder="Paste client's CV here..."></textarea>
+      <div class="cv-label-row">
+        <label>CV *</label>
+        <button class="upload-btn" type="button" onclick="triggerPdfUpload('nc-cv', this)">upload PDF</button>
+      </div>
+      <textarea id="nc-cv" style="min-height: 160px" placeholder="Paste client's CV here…"></textarea>
 
       <label>Profile notes (optional — archetype, deal-breakers, salary target)</label>
       <textarea id="nc-profile" style="min-height: 90px" placeholder="Leave empty to use default template..."></textarea>
@@ -371,6 +436,27 @@
       <div class="actions">
         <button type="button" id="nc-cancel">Cancel</button>
         <button type="button" class="primary" id="nc-save">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Client modal -->
+  <div class="modal-backdrop" id="edit-client-modal">
+    <div class="modal">
+      <h2>Edit Client</h2>
+      <label>CV</label>
+      <div class="cv-label-row" style="margin-top:0; margin-bottom:5px;">
+        <span style="font-size:11px;color:var(--muted)">CV</span>
+        <button class="upload-btn" type="button" onclick="triggerPdfUpload('ec-cv', this)">upload PDF</button>
+      </div>
+      <textarea id="ec-cv" style="min-height: 160px" placeholder="CV content…"></textarea>
+
+      <label>Profile notes</label>
+      <textarea id="ec-profile" style="min-height: 90px" placeholder="Archetypes, deal-breakers, salary target…"></textarea>
+
+      <div class="actions">
+        <button type="button" id="ec-cancel">Cancel</button>
+        <button type="button" class="primary" id="ec-save">Save</button>
       </div>
     </div>
   </div>
@@ -389,6 +475,44 @@
 </main>
 
 <script>
+  // ---------- PDF upload ----------
+  const _pdfInput = document.createElement('input');
+  _pdfInput.type = 'file';
+  _pdfInput.accept = 'application/pdf';
+  _pdfInput.style.display = 'none';
+  document.body.appendChild(_pdfInput);
+
+  let _pdfTarget = null; // textarea id
+  let _pdfBtn = null;    // button element
+
+  function triggerPdfUpload(textareaId, btn) {
+    _pdfTarget = textareaId;
+    _pdfBtn = btn;
+    _pdfInput.value = '';
+    _pdfInput.click();
+  }
+
+  _pdfInput.addEventListener('change', async () => {
+    const file = _pdfInput.files[0];
+    if (!file || !_pdfTarget) return;
+    _pdfBtn.textContent = 'parsing…';
+    _pdfBtn.classList.add('loading');
+    try {
+      const fd = new FormData();
+      fd.append('pdf', file);
+      const res = await fetch('/api/parse-pdf', { method: 'POST', body: fd });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'parse error');
+      document.getElementById(_pdfTarget).value = json.text.trim();
+      _pdfBtn.textContent = '✓ loaded';
+      setTimeout(() => { _pdfBtn.textContent = 'upload PDF'; }, 2000);
+    } catch (e) {
+      alert('PDF parse failed: ' + e.message);
+      _pdfBtn.textContent = 'upload PDF';
+    }
+    _pdfBtn.classList.remove('loading');
+  });
+
   // ---------- Client management ----------
   const clientSelect = document.getElementById('client-select');
   const clientCountLabel = document.getElementById('client-count');
@@ -403,14 +527,20 @@
     await onClientChange();
   }
 
+  const editBtn = document.getElementById('edit-client-btn');
+  const deleteBtn = document.getElementById('delete-client-btn');
+
   async function onClientChange() {
     const slug = clientSelect.value;
+    const hasClient = !!slug;
+    editBtn.disabled = !hasClient;
+    deleteBtn.disabled = !hasClient;
+    loadReports(slug);
     if (!slug) {
       currentClient = null;
       return;
     }
     currentClient = await fetch('/api/clients/' + slug).then(r => r.json());
-    // Auto-fill CV fields across all three modes
     if (currentClient && currentClient.cv) {
       document.getElementById('cv-input').value = currentClient.cv;
       document.getElementById('cv-compare').value = currentClient.cv;
@@ -419,6 +549,74 @@
   }
 
   clientSelect.addEventListener('change', onClientChange);
+
+  // ---------- Edit client ----------
+  const ecModal = document.getElementById('edit-client-modal');
+
+  editBtn.addEventListener('click', () => {
+    if (!currentClient) return;
+    document.getElementById('ec-cv').value = currentClient.cv || '';
+    document.getElementById('ec-profile').value = currentClient.profile || '';
+    ecModal.classList.add('open');
+  });
+
+  document.getElementById('ec-cancel').addEventListener('click', () => ecModal.classList.remove('open'));
+  ecModal.addEventListener('click', (e) => { if (e.target === ecModal) ecModal.classList.remove('open'); });
+
+  document.getElementById('ec-save').addEventListener('click', async () => {
+    if (!currentClient) return;
+    const cv = document.getElementById('ec-cv').value;
+    const profile = document.getElementById('ec-profile').value;
+    const res = await fetch('/api/clients/' + currentClient.slug, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cv, profile }),
+    });
+    if (!res.ok) { alert('Failed to save.'); return; }
+    ecModal.classList.remove('open');
+    await loadClients(currentClient.slug);
+  });
+
+  // ---------- Reports ----------
+  const reportsList = document.getElementById('reports-list');
+
+  async function loadReports(slug) {
+    reportsList.innerHTML = '<span class="no-reports">Loading…</span>';
+    if (!slug) { reportsList.innerHTML = '<span class="no-reports">Select a client</span>'; return; }
+    const reports = await fetch(`/api/clients/${slug}/reports`).then(r => r.json()).catch(() => []);
+    if (!reports.length) { reportsList.innerHTML = '<span class="no-reports">No reports yet</span>'; return; }
+    reportsList.innerHTML = reports.map(r => {
+      const label = r.filename.replace(/^\d+-/, '').replace(/-\d{4}-\d{2}-\d{2}\.md$/, '').replace(/-/g, ' ');
+      const date = (r.filename.match(/(\d{4}-\d{2}-\d{2})/) || [])[1] || '';
+      const meta = [r.score ? `Score ${r.score}` : '', date].filter(Boolean).join(' · ');
+      return `<button class="report-item" data-file="${r.filename}" title="${r.filename}">
+        <div class="report-name">${label}</div>
+        ${meta ? `<div class="report-meta">${meta}</div>` : ''}
+      </button>`;
+    }).join('');
+
+    reportsList.querySelectorAll('.report-item').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        reportsList.querySelectorAll('.report-item').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const slug = clientSelect.value;
+        const file = btn.dataset.file;
+        const text = await fetch(`/api/clients/${slug}/reports/${file}`).then(r => r.text());
+        output.innerHTML = renderMarkdown(text);
+        pill.textContent = 'report';
+        pill.className = 'status-pill done';
+      });
+    });
+  }
+
+  // ---------- Delete client ----------
+  deleteBtn.addEventListener('click', async () => {
+    if (!currentClient) return;
+    if (!confirm(`Delete client "${currentClient.name}"? This cannot be undone.`)) return;
+    const res = await fetch('/api/clients/' + currentClient.slug, { method: 'DELETE' });
+    if (!res.ok) { alert('Failed to delete.'); return; }
+    await loadClients();
+  });
 
   // Health check + initial load
   fetch('/api/health').then(r => r.json()).then(d => {
@@ -541,6 +739,14 @@
             raw += data;
             output.innerHTML = renderMarkdown(raw);
             output.scrollTop = output.scrollHeight;
+            // Auto-fill company field from streamed output if still empty
+            if (currentMode === 'evaluate') {
+              const companyField = document.getElementById('company-eval');
+              if (!companyField.value) {
+                const m = raw.match(/\*\*Company:\*\*\s*([^\n*]+)/);
+                if (m) companyField.value = m[1].trim();
+              }
+            }
           } else if (type === 'status') {
             if (!raw) output.innerHTML = `<span class="placeholder">${data}</span>`;
           } else if (type === 'error') {
@@ -549,6 +755,7 @@
             output.innerHTML += `<br><span style="color:var(--red)">Error: ${data}</span>`;
           } else if (type === 'saved') {
             output.innerHTML += `<br><span style="color:var(--green)">Saved → ${data}</span>`;
+            if (clientSelect.value) loadReports(clientSelect.value);
           } else if (type === 'done') {
             pill.textContent = 'done';
             pill.className = 'status-pill done';

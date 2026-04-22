@@ -1,8 +1,12 @@
 import express from 'express';
 import { spawn } from 'child_process';
-import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, statSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, statSync, rmSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import multer from 'multer';
+import { createRequire } from 'module';
+const _require = createRequire(import.meta.url);
+const pdfParse = _require('pdf-parse');
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const CLIENTS_DIR = join(__dirname, 'clients');
@@ -11,6 +15,18 @@ const PORT = 3131;
 
 app.use(express.json({ limit: '2mb' }));
 app.use(express.static(join(__dirname, 'public')));
+
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
+
+app.post('/api/parse-pdf', upload.single('pdf'), async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'no file uploaded' });
+  try {
+    const data = await pdfParse(req.file.buffer);
+    res.json({ text: data.text });
+  } catch (e) {
+    res.status(422).json({ error: 'failed to parse PDF: ' + e.message });
+  }
+});
 
 function readFileIfExists(p) {
   return existsSync(p) ? readFileSync(p, 'utf8') : '';
@@ -135,6 +151,45 @@ app.put('/api/clients/:slug', (req, res) => {
   if (typeof cv === 'string') writeFileSync(join(dir, 'cv.md'), cv);
   if (typeof profile === 'string') writeFileSync(join(dir, 'profile.md'), profile);
   res.json({ ok: true });
+});
+
+app.delete('/api/clients/:slug', (req, res) => {
+  const { slug } = req.params;
+  const dir = join(CLIENTS_DIR, slug);
+  if (!existsSync(dir)) return res.status(404).json({ error: 'client not found' });
+  rmSync(dir, { recursive: true, force: true });
+  res.json({ ok: true });
+});
+
+// ---------- Reports ----------
+
+app.get('/api/clients/:slug/reports', (req, res) => {
+  const { slug } = req.params;
+  const dir = join(CLIENTS_DIR, slug);
+  if (!existsSync(dir)) return res.status(404).json({ error: 'client not found' });
+  const reportsDir = join(dir, 'reports');
+  if (!existsSync(reportsDir)) return res.json([]);
+  const files = readdirSync(reportsDir)
+    .filter(f => f.endsWith('.md'))
+    .sort((a, b) => b.localeCompare(a))
+    .map(f => {
+      const raw = readFileIfExists(join(reportsDir, f));
+      const scoreMatch = raw.match(/\*\*Score:\*\*\s*([\d.]+)/);
+      const legitMatch = raw.match(/\*\*Legitimacy:\*\*\s*([^\n]+)/);
+      return {
+        filename: f,
+        score: scoreMatch ? scoreMatch[1] : null,
+        legitimacy: legitMatch ? legitMatch[1].trim() : null,
+      };
+    });
+  res.json(files);
+});
+
+app.get('/api/clients/:slug/reports/:filename', (req, res) => {
+  const { slug, filename } = req.params;
+  const filePath = join(CLIENTS_DIR, slug, 'reports', filename);
+  if (!existsSync(filePath)) return res.status(404).json({ error: 'report not found' });
+  res.type('text/plain').send(readFileSync(filePath, 'utf8'));
 });
 
 // ---------- Evaluate (SSE stream) ----------
