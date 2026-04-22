@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>career-ops</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f0f11;
+      --surface: #1a1a1f;
+      --border: #2e2e38;
+      --accent: #7c6af7;
+      --accent-dim: #4e45a0;
+      --text: #e8e8f0;
+      --muted: #7a7a90;
+      --green: #4ade80;
+      --red: #f87171;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 13px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo { font-size: 15px; font-weight: 700; color: var(--accent); letter-spacing: -0.3px; }
+    .logo span { color: var(--muted); font-weight: 400; }
+    .badge { font-size: 10px; background: var(--accent-dim); color: #c4bcff; padding: 2px 7px; border-radius: 99px; }
+
+    .health { margin-left: auto; display: flex; gap: 8px; align-items: center; font-size: 11px; color: var(--muted); }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
+    .dot.ok { background: var(--green); }
+    .dot.warn { background: #facc15; }
+
+    select {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 12px;
+      padding: 9px 10px;
+      outline: none;
+      cursor: pointer;
+    }
+    select:focus { border-color: var(--accent); }
+
+    .client-bar { display: flex; gap: 6px; align-items: stretch; margin-bottom: 18px; }
+    .client-bar select { flex: 1; }
+    .btn-small {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 6px;
+      padding: 0 12px;
+      font-family: inherit;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .btn-small:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+      display: none; align-items: center; justify-content: center; z-index: 100;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      width: min(520px, 92vw);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal h2 { font-size: 14px; color: var(--accent); margin-bottom: 16px; }
+    .modal .actions { display: flex; gap: 8px; margin-top: 18px; justify-content: flex-end; }
+    .modal .actions button {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+    }
+    .modal .actions button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .modal .actions button:hover { opacity: 0.85; }
+
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 0;
+      height: calc(100vh - 57px);
+    }
+
+    .panel {
+      padding: 24px;
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+    }
+
+    .panel-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* Mode tabs */
+    .tabs { display: flex; gap: 6px; margin-bottom: 20px; }
+    .tab {
+      flex: 1;
+      padding: 7px 0;
+      border: 1px solid var(--border);
+      background: none;
+      color: var(--muted);
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 11px;
+      transition: all 0.15s;
+    }
+    .tab:hover { border-color: var(--accent-dim); color: var(--text); }
+    .tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 5px; margin-top: 14px; }
+    label:first-of-type { margin-top: 0; }
+
+    textarea, input[type="text"] {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 12px;
+      padding: 10px;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    textarea:focus, input[type="text"]:focus { border-color: var(--accent); }
+    textarea { min-height: 90px; }
+    #cv-input { min-height: 140px; }
+    #jd-input { min-height: 140px; }
+
+    .row { display: flex; gap: 8px; }
+    .row > div { flex: 1; }
+
+    .hint { font-size: 10px; color: var(--muted); margin-top: 4px; }
+
+    button.run {
+      width: 100%;
+      margin-top: 18px;
+      padding: 11px;
+      background: var(--accent);
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    button.run:hover { opacity: 0.85; }
+    button.run:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Output panel */
+    .output-panel {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .output-header {
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .status-pill {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 99px;
+      background: var(--surface);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .status-pill.running { background: #1a1a2e; color: #a78bfa; border-color: #4e45a0; animation: pulse 1.5s infinite; }
+    .status-pill.done { background: #0f2318; color: var(--green); border-color: #166534; }
+    .status-pill.error { background: #2d1010; color: var(--red); border-color: #7f1d1d; }
+
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    .copy-btn {
+      margin-left: auto;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 5px;
+      padding: 4px 10px;
+      font-family: inherit;
+      font-size: 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .copy-btn:hover { border-color: var(--accent); color: var(--text); }
+
+    #output {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      white-space: pre-wrap;
+      line-height: 1.7;
+      font-size: 12.5px;
+    }
+
+    #output .placeholder {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* Markdown-ish rendering */
+    #output h1, #output h2, #output h3 {
+      color: var(--accent);
+      margin: 1.2em 0 0.4em;
+      font-size: 13px;
+    }
+    #output strong { color: #c4bcff; }
+    #output code {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 11px;
+    }
+    #output table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 0.8em 0;
+      font-size: 11.5px;
+    }
+    #output th, #output td {
+      border: 1px solid var(--border);
+      padding: 5px 10px;
+      text-align: left;
+    }
+    #output th { background: var(--surface); color: var(--accent); }
+    #output tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+    #output hr { border: none; border-top: 1px solid var(--border); margin: 1em 0; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">career<span>-</span>ops</div>
+  <div class="badge">local</div>
+  <div class="health">
+    <span id="client-count">0 clients</span>
+    <div class="dot ok" id="health-dot"></div>
+  </div>
+</header>
+
+<main>
+  <!-- Left panel: inputs -->
+  <div class="panel">
+    <div class="panel-label">Client</div>
+    <div class="client-bar">
+      <select id="client-select">
+        <option value="">— Ad-hoc (no client) —</option>
+      </select>
+      <button class="btn-small" id="new-client-btn" type="button">+ New</button>
+    </div>
+
+    <div class="panel-label">Mode</div>
+    <div class="tabs">
+      <button class="tab active" data-mode="evaluate">Evaluate</button>
+      <button class="tab" data-mode="compare">Compare</button>
+      <button class="tab" data-mode="interview">Interview</button>
+    </div>
+
+    <div id="fields-evaluate">
+      <label>Candidate CV (paste markdown or plain text)</label>
+      <textarea id="cv-input" placeholder="Paste CV here, or pick a client above..."></textarea>
+
+      <label>Company (optional — used to name the report file)</label>
+      <input type="text" id="company-eval" placeholder="e.g. Stripe" />
+
+      <label>Job Description or URL</label>
+      <textarea id="jd-input" placeholder="Paste the full JD text, or a job URL..."></textarea>
+    </div>
+
+    <div id="fields-compare" style="display:none">
+      <label>Your CV</label>
+      <textarea id="cv-compare" placeholder="Paste your CV here..."></textarea>
+
+      <label>Job Descriptions (separate each JD with --- on its own line)</label>
+      <textarea id="jds-compare" style="min-height:200px" placeholder="--- JD 1 ---&#10;Paste first JD here...&#10;&#10;--- JD 2 ---&#10;Paste second JD here..."></textarea>
+    </div>
+
+    <div id="fields-interview" style="display:none">
+      <label>Your CV</label>
+      <textarea id="cv-interview" placeholder="Paste your CV here..."></textarea>
+
+      <div class="row">
+        <div>
+          <label>Company</label>
+          <input type="text" id="company-input" placeholder="e.g. Stripe" />
+        </div>
+        <div>
+          <label>Role</label>
+          <input type="text" id="role-input" placeholder="e.g. Senior PM" />
+        </div>
+      </div>
+
+      <label>Job Description (optional but recommended)</label>
+      <textarea id="jd-interview" placeholder="Paste JD for better accuracy..."></textarea>
+    </div>
+
+    <button class="run" id="run-btn">Run →</button>
+  </div>
+
+  <!-- New Client modal -->
+  <div class="modal-backdrop" id="new-client-modal">
+    <div class="modal">
+      <h2>New Client</h2>
+      <label>Name *</label>
+      <input type="text" id="nc-name" placeholder="e.g. Budi Surya" />
+
+      <label>CV (markdown or plain text) *</label>
+      <textarea id="nc-cv" style="min-height: 160px" placeholder="Paste client's CV here..."></textarea>
+
+      <label>Profile notes (optional — archetype, deal-breakers, salary target)</label>
+      <textarea id="nc-profile" style="min-height: 90px" placeholder="Leave empty to use default template..."></textarea>
+
+      <div class="actions">
+        <button type="button" id="nc-cancel">Cancel</button>
+        <button type="button" class="primary" id="nc-save">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right panel: output -->
+  <div class="output-panel">
+    <div class="output-header">
+      <span style="color:var(--muted);font-size:11px">Output</span>
+      <span class="status-pill" id="status-pill">idle</span>
+      <button class="copy-btn" id="copy-btn">copy</button>
+    </div>
+    <div id="output">
+      <span class="placeholder">Results will appear here. Fill in the form and click Run →</span>
+    </div>
+  </div>
+</main>
+
+<script>
+  // ---------- Client management ----------
+  const clientSelect = document.getElementById('client-select');
+  const clientCountLabel = document.getElementById('client-count');
+  let currentClient = null; // { slug, name, cv, profile }
+
+  async function loadClients(selectSlug = null) {
+    const list = await fetch('/api/clients').then(r => r.json()).catch(() => []);
+    clientSelect.innerHTML = '<option value="">— Ad-hoc (no client) —</option>'
+      + list.map(c => `<option value="${c.slug}">${c.name}</option>`).join('');
+    clientCountLabel.textContent = list.length + ' client' + (list.length === 1 ? '' : 's');
+    if (selectSlug) clientSelect.value = selectSlug;
+    await onClientChange();
+  }
+
+  async function onClientChange() {
+    const slug = clientSelect.value;
+    if (!slug) {
+      currentClient = null;
+      return;
+    }
+    currentClient = await fetch('/api/clients/' + slug).then(r => r.json());
+    // Auto-fill CV fields across all three modes
+    if (currentClient && currentClient.cv) {
+      document.getElementById('cv-input').value = currentClient.cv;
+      document.getElementById('cv-compare').value = currentClient.cv;
+      document.getElementById('cv-interview').value = currentClient.cv;
+    }
+  }
+
+  clientSelect.addEventListener('change', onClientChange);
+
+  // Health check + initial load
+  fetch('/api/health').then(r => r.json()).then(d => {
+    document.getElementById('health-dot').className = 'dot ' + (d.ok ? 'ok' : 'warn');
+  }).catch(() => {});
+  loadClients();
+
+  // ---------- New client modal ----------
+  const ncModal = document.getElementById('new-client-modal');
+  document.getElementById('new-client-btn').addEventListener('click', () => {
+    document.getElementById('nc-name').value = '';
+    document.getElementById('nc-cv').value = '';
+    document.getElementById('nc-profile').value = '';
+    ncModal.classList.add('open');
+  });
+  document.getElementById('nc-cancel').addEventListener('click', () => ncModal.classList.remove('open'));
+  ncModal.addEventListener('click', (e) => { if (e.target === ncModal) ncModal.classList.remove('open'); });
+
+  document.getElementById('nc-save').addEventListener('click', async () => {
+    const name = document.getElementById('nc-name').value.trim();
+    const cv = document.getElementById('nc-cv').value.trim();
+    const profile = document.getElementById('nc-profile').value.trim();
+    if (!name || !cv) { alert('Name and CV are required.'); return; }
+    const res = await fetch('/api/clients', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, cv, profile }),
+    });
+    if (!res.ok) { alert('Failed to create client.'); return; }
+    const { slug } = await res.json();
+    ncModal.classList.remove('open');
+    await loadClients(slug);
+  });
+
+  // Tab switching
+  let currentMode = 'evaluate';
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentMode = tab.dataset.mode;
+      ['evaluate','compare','interview'].forEach(m => {
+        document.getElementById('fields-' + m).style.display = m === currentMode ? 'block' : 'none';
+      });
+    });
+  });
+
+  // Simple markdown renderer (tables + headers + bold + code + hr)
+  function renderMarkdown(text) {
+    return text
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+      .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/^---+$/gm, '<hr>')
+      .replace(/^\|(.+)\|$/gm, (_, row) => {
+        const cells = row.split('|').map(c => c.trim());
+        return '<tr>' + cells.map(c => /^[-:]+$/.test(c) ? '' : `<td>${c}</td>`).join('') + '</tr>';
+      })
+      .replace(/(<tr>.*<\/tr>\n?)+/gs, m => `<table>${m}</table>`)
+      .replace(/<\/td><\/tr>\n<tr><td>/g, '</td></tr><tr><td>');
+  }
+
+  // Run
+  const runBtn = document.getElementById('run-btn');
+  const output = document.getElementById('output');
+  const pill = document.getElementById('status-pill');
+
+  runBtn.addEventListener('click', async () => {
+    let body = { mode: currentMode };
+    if (clientSelect.value) body.clientId = clientSelect.value;
+
+    if (currentMode === 'evaluate') {
+      body.cv = document.getElementById('cv-input').value.trim();
+      body.jd = document.getElementById('jd-input').value.trim();
+      body.company = document.getElementById('company-eval').value.trim();
+    } else if (currentMode === 'compare') {
+      body.cv = document.getElementById('cv-compare').value.trim();
+      body.jd = document.getElementById('jds-compare').value.trim();
+    } else {
+      body.cv = document.getElementById('cv-interview').value.trim();
+      body.company = document.getElementById('company-input').value.trim();
+      body.role = document.getElementById('role-input').value.trim();
+      body.jd = document.getElementById('jd-interview').value.trim();
+    }
+
+    if (!body.cv) { alert('Please paste a CV (or select a client).'); return; }
+
+    runBtn.disabled = true;
+    pill.textContent = 'running';
+    pill.className = 'status-pill running';
+    output.innerHTML = '';
+
+    let raw = '';
+
+    try {
+      const res = await fetch('/api/evaluate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+        const parts = buf.split('\n\n');
+        buf = parts.pop();
+
+        for (const part of parts) {
+          if (!part.startsWith('data: ')) continue;
+          const { type, data } = JSON.parse(part.slice(6));
+          if (type === 'text') {
+            raw += data;
+            output.innerHTML = renderMarkdown(raw);
+            output.scrollTop = output.scrollHeight;
+          } else if (type === 'status') {
+            if (!raw) output.innerHTML = `<span class="placeholder">${data}</span>`;
+          } else if (type === 'error') {
+            pill.textContent = 'error';
+            pill.className = 'status-pill error';
+            output.innerHTML += `<br><span style="color:var(--red)">Error: ${data}</span>`;
+          } else if (type === 'saved') {
+            output.innerHTML += `<br><span style="color:var(--green)">Saved → ${data}</span>`;
+          } else if (type === 'done') {
+            pill.textContent = 'done';
+            pill.className = 'status-pill done';
+          }
+        }
+      }
+    } catch (e) {
+      pill.textContent = 'error';
+      pill.className = 'status-pill error';
+      output.innerHTML = `<span style="color:var(--red)">Connection error: ${e.message}</span>`;
+    }
+
+    runBtn.disabled = false;
+  });
+
+  // Copy
+  document.getElementById('copy-btn').addEventListener('click', () => {
+    const text = output.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copy-btn');
+      btn.textContent = 'copied!';
+      setTimeout(() => btn.textContent = 'copy', 1500);
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,3 +1,8 @@
+# Client data (service mode — each client's CV, profile, reports)
+clients/*
+!clients/_template/
+!clients/_template/**
+
 # Personal data (user fills these)
 cv.md
 data/applications.md
