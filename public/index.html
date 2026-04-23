@@ -4,337 +4,544 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>career-ops</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0f0f11;
-      --surface: #1a1a1f;
-      --border: #2e2e38;
-      --accent: #7c6af7;
-      --accent-dim: #4e45a0;
-      --text: #e8e8f0;
-      --muted: #7a7a90;
+      --bg: #0b0b0d;
+      --surface: #141418;
+      --surface-2: #1c1c22;
+      --border: #23232b;
+      --border-strong: #2f2f38;
+      --accent: #a78bfa;
+      --accent-dim: rgba(167, 139, 250, 0.12);
+      --text: #e6e6ea;
+      --text-dim: #9a9aa8;
+      --muted: #6a6a78;
       --green: #4ade80;
       --red: #f87171;
+      --yellow: #fbbf24;
+
+      --font-sans: 'IBM Plex Sans', -apple-system, system-ui, sans-serif;
+      --font-mono: 'IBM Plex Mono', 'SF Mono', monospace;
     }
+
+    html, body { height: 100%; }
 
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-family: var(--font-sans);
       font-size: 13px;
-      min-height: 100vh;
+      line-height: 1.5;
       display: flex;
       flex-direction: column;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
 
+    /* ---------- Header ---------- */
     header {
-      padding: 20px 28px;
+      padding: 14px 24px;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+    .logo {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: -0.2px;
+    }
+    .logo .dim { color: var(--muted); }
+    .tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--muted);
+      padding: 2px 7px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+    }
+    .health {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--muted);
+    }
+    .dot.ok { background: var(--green); box-shadow: 0 0 8px rgba(74, 222, 128, 0.4); }
+    .dot.warn { background: var(--yellow); }
+
+    /* ---------- Layout ---------- */
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      min-height: 0;
+      min-width: 0;
     }
 
-    .logo { font-size: 15px; font-weight: 700; color: var(--accent); letter-spacing: -0.3px; }
-    .logo span { color: var(--muted); font-weight: 400; }
-    .badge { font-size: 10px; background: var(--accent-dim); color: #c4bcff; padding: 2px 7px; border-radius: 99px; }
+    .panel {
+      padding: 18px 20px;
+      overflow: hidden;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      height: 100%;
+      min-height: 0;
+    }
 
-    .health { margin-left: auto; display: flex; gap: 8px; align-items: center; font-size: 11px; color: var(--muted); }
-    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
-    .dot.ok { background: var(--green); }
-    .dot.warn { background: #facc15; }
+    .panel .fields-wrap {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow: hidden;
+    }
 
-    select {
+    .panel .mode-fields {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow: hidden;
+    }
+
+    .field.grow {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .field.grow textarea {
+      flex: 1;
+      min-height: 0;
+      resize: none;
+    }
+
+    /* ---------- Form primitives ---------- */
+    .field { margin: 0; }
+    .field:last-child { margin: 0; }
+
+    label, .label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    input[type="text"], textarea, select {
       width: 100%;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: 5px;
       color: var(--text);
-      font-family: inherit;
-      font-size: 12px;
-      padding: 9px 10px;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      line-height: 1.5;
+      padding: 8px 10px;
       outline: none;
+      transition: border-color 0.12s, background 0.12s;
+    }
+    input[type="text"]:hover, textarea:hover, select:hover { border-color: var(--border-strong); }
+    input[type="text"]:focus, textarea:focus, select:focus {
+      border-color: var(--accent);
+      background: var(--surface-2);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    #nc-cv, #ec-cv { min-height: 140px; resize: vertical; }
+
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%236a6a78' stroke-width='1.3' fill='none' stroke-linecap='round'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 26px;
       cursor: pointer;
     }
-    select:focus { border-color: var(--accent); }
 
-    .client-bar { display: flex; gap: 6px; align-items: stretch; margin-bottom: 18px; }
-    .client-bar select { flex: 1; }
-    .btn-small {
+    .row { display: flex; gap: 8px; }
+    .row > * { flex: 1; min-width: 0; }
+
+    .label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .label-row label, .label-row .label { margin: 0; }
+
+    /* ---------- Buttons ---------- */
+    button {
+      font-family: var(--font-sans);
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+    }
+    button:disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 7px 12px;
       background: var(--surface);
       border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 6px;
-      padding: 0 12px;
-      font-family: inherit;
-      font-size: 11px;
-      cursor: pointer;
-      transition: all 0.15s;
+      border-radius: 5px;
+      color: var(--text-dim);
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.12s;
       white-space: nowrap;
     }
-    .btn-small:hover { border-color: var(--accent); color: var(--accent); }
-    .btn-small.danger:hover { border-color: var(--red); color: var(--red); }
-    .btn-small:disabled { opacity: 0.3; pointer-events: none; }
+    .btn:hover:not(:disabled) {
+      border-color: var(--border-strong);
+      color: var(--text);
+      background: var(--surface-2);
+    }
+    .btn.ghost { background: transparent; }
+    .btn.icon { padding: 6px 9px; font-size: 11px; }
+    .btn.danger:hover:not(:disabled) { border-color: var(--red); color: var(--red); }
 
-    /* Modal */
+    .btn-upload {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--muted);
+      background: none;
+      border: 1px dashed var(--border-strong);
+      border-radius: 4px;
+      padding: 2px 8px;
+      transition: all 0.12s;
+      letter-spacing: 0.3px;
+    }
+    .btn-upload:hover:not(:disabled) { color: var(--accent); border-color: var(--accent); border-style: solid; }
+    .btn-upload.loading { opacity: 0.4; pointer-events: none; }
+
+    .btn-primary {
+      width: 100%;
+      padding: 11px;
+      background: var(--accent);
+      color: #0b0b0d;
+      border: none;
+      border-radius: 5px;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      transition: all 0.12s;
+    }
+    .btn-primary:hover:not(:disabled) { background: #b79dfc; transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+
+    .client-bar {
+      display: flex;
+      gap: 6px;
+      align-items: stretch;
+    }
+    .client-bar select { flex: 1; min-width: 0; }
+    .client-bar .btn { padding: 7px 10px; font-size: 11px; }
+
+    /* ---------- Mode tabs (segmented) ---------- */
+    .segmented {
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .segmented button {
+      flex: 1;
+      padding: 6px 0;
+      background: transparent;
+      color: var(--text-dim);
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .segmented button:hover { color: var(--text); }
+    .segmented button.active {
+      background: var(--surface-2);
+      color: var(--text);
+      box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+
+    /* ---------- Run button area ---------- */
+    .run-row { flex-shrink: 0; }
+
+    /* ---------- Modal ---------- */
     .modal-backdrop {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.6);
-      display: none; align-items: center; justify-content: center; z-index: 100;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
     }
     .modal-backdrop.open { display: flex; }
     .modal {
       background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 24px;
-      width: min(520px, 92vw);
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      padding: 22px;
+      width: min(520px, 100%);
       max-height: 90vh;
       overflow-y: auto;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
     }
-    .modal h2 { font-size: 14px; color: var(--accent); margin-bottom: 16px; }
-    .modal .actions { display: flex; gap: 8px; margin-top: 18px; justify-content: flex-end; }
-    .modal .actions button {
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-family: inherit;
-      font-size: 12px;
-      cursor: pointer;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-    }
-    .modal .actions button.primary {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-    }
-    .modal .actions button:hover { opacity: 0.85; }
-
-    main {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 380px 220px 1fr;
-      gap: 0;
-      height: calc(100vh - 57px);
-    }
-
-    .panel {
-      padding: 24px;
-      overflow-y: auto;
-      border-right: 1px solid var(--border);
-    }
-
-    .panel-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-
-    /* Mode tabs */
-    .tabs { display: flex; gap: 6px; margin-bottom: 20px; }
-    .tab {
-      flex: 1;
-      padding: 7px 0;
-      border: 1px solid var(--border);
-      background: none;
-      color: var(--muted);
-      border-radius: 6px;
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 11px;
-      transition: all 0.15s;
-    }
-    .tab:hover { border-color: var(--accent-dim); color: var(--text); }
-    .tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-
-    label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 5px; margin-top: 14px; }
-    label:first-of-type { margin-top: 0; }
-
-    textarea, input[type="text"] {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--text);
-      font-family: inherit;
-      font-size: 12px;
-      padding: 10px;
-      resize: vertical;
-      outline: none;
-      transition: border-color 0.15s;
-    }
-    textarea:focus, input[type="text"]:focus { border-color: var(--accent); }
-    textarea { min-height: 90px; }
-    #cv-input { min-height: 140px; }
-    #jd-input { min-height: 140px; }
-
-    .row { display: flex; gap: 8px; }
-    .row > div { flex: 1; }
-
-    .hint { font-size: 10px; color: var(--muted); margin-top: 4px; }
-
-    .cv-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; margin-top: 14px; }
-    .cv-label-row label { margin: 0; }
-    .upload-btn {
-      font-size: 10px;
-      color: var(--muted);
-      background: none;
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      padding: 2px 8px;
-      cursor: pointer;
-      font-family: inherit;
-      transition: all 0.15s;
-    }
-    .upload-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .upload-btn.loading { opacity: 0.5; pointer-events: none; }
-
-    button.run {
-      width: 100%;
-      margin-top: 18px;
-      padding: 11px;
-      background: var(--accent);
-      border: none;
-      border-radius: 6px;
-      color: #fff;
-      font-family: inherit;
-      font-size: 13px;
+    .modal h2 {
+      font-size: 14px;
       font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.15s;
-    }
-    button.run:hover { opacity: 0.85; }
-    button.run:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    /* Reports panel */
-    .reports-panel {
-      padding: 16px;
-      overflow-y: auto;
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .report-item {
-      padding: 8px 10px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      cursor: pointer;
-      transition: border-color 0.15s;
-      background: none;
-      text-align: left;
-      width: 100%;
-      font-family: inherit;
       color: var(--text);
+      margin-bottom: 16px;
+      letter-spacing: -0.2px;
     }
-    .report-item:hover { border-color: var(--accent); }
-    .report-item.active { border-color: var(--accent); background: rgba(124,106,247,0.08); }
-    .report-name { font-size: 10px; color: var(--muted); word-break: break-all; line-height: 1.4; }
-    .report-meta { font-size: 10px; color: var(--accent); margin-top: 3px; }
-    .no-reports { font-size: 10px; color: var(--muted); font-style: italic; }
+    .modal .field { margin-bottom: 12px; }
+    .modal .actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 18px;
+      justify-content: flex-end;
+    }
 
-    /* Output panel */
+    /* ---------- Output panel ---------- */
     .output-panel {
       display: flex;
       flex-direction: column;
-      height: 100%;
+      min-height: 0;
+      min-width: 0;
     }
-
     .output-header {
-      padding: 14px 24px;
+      padding: 12px 20px;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       gap: 10px;
       flex-shrink: 0;
     }
+    .output-header .label { margin: 0; }
 
-    .status-pill {
+    .pill {
+      font-family: var(--font-mono);
       font-size: 10px;
-      padding: 2px 8px;
-      border-radius: 99px;
+      padding: 3px 8px;
+      border-radius: 3px;
       background: var(--surface);
       color: var(--muted);
       border: 1px solid var(--border);
+      letter-spacing: 0.3px;
     }
-    .status-pill.running { background: #1a1a2e; color: #a78bfa; border-color: #4e45a0; animation: pulse 1.5s infinite; }
-    .status-pill.done { background: #0f2318; color: var(--green); border-color: #166534; }
-    .status-pill.error { background: #2d1010; color: var(--red); border-color: #7f1d1d; }
-
-    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-
-    .copy-btn {
-      margin-left: auto;
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      border-radius: 5px;
-      padding: 4px 10px;
-      font-family: inherit;
-      font-size: 10px;
-      cursor: pointer;
-      transition: all 0.15s;
+    .pill.running {
+      background: var(--accent-dim);
+      color: var(--accent);
+      border-color: transparent;
     }
-    .copy-btn:hover { border-color: var(--accent); color: var(--text); }
+    .pill.running::before {
+      content: '';
+      display: inline-block;
+      width: 5px; height: 5px;
+      background: var(--accent);
+      border-radius: 50%;
+      margin-right: 5px;
+      vertical-align: middle;
+      animation: blink 1s infinite;
+    }
+    .pill.done { color: var(--green); border-color: rgba(74, 222, 128, 0.25); background: rgba(74, 222, 128, 0.08); }
+    .pill.error { color: var(--red); border-color: rgba(248, 113, 113, 0.25); background: rgba(248, 113, 113, 0.08); }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    .output-header .spacer { flex: 1; }
+
+    .output-body {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+    }
 
     #output {
       flex: 1;
       overflow-y: auto;
-      padding: 24px;
-      white-space: pre-wrap;
+      padding: 24px 32px;
+      font-size: 13.5px;
       line-height: 1.7;
-      font-size: 12.5px;
+      min-width: 0;
     }
-
     #output .placeholder {
       color: var(--muted);
       font-style: italic;
+      font-family: var(--font-mono);
+      font-size: 12px;
     }
 
-    /* Markdown-ish rendering */
+    /* Markdown rendering */
     #output h1, #output h2, #output h3 {
-      color: var(--accent);
-      margin: 1.2em 0 0.4em;
-      font-size: 13px;
+      color: var(--text);
+      font-weight: 600;
+      margin: 1.4em 0 0.5em;
+      letter-spacing: -0.2px;
     }
-    #output strong { color: #c4bcff; }
+    #output h1 { font-size: 18px; }
+    #output h2 { font-size: 15px; color: var(--accent); }
+    #output h3 { font-size: 13px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.6px; font-family: var(--font-mono); }
+    #output h1:first-child, #output h2:first-child, #output h3:first-child { margin-top: 0; }
+    #output strong { color: var(--text); font-weight: 600; }
     #output code {
       background: var(--surface);
       border: 1px solid var(--border);
-      padding: 1px 5px;
+      padding: 1px 6px;
       border-radius: 3px;
-      font-size: 11px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
     }
     #output table {
       border-collapse: collapse;
       width: 100%;
-      margin: 0.8em 0;
-      font-size: 11.5px;
+      margin: 1em 0;
+      font-size: 12.5px;
+      table-layout: fixed;
     }
     #output th, #output td {
       border: 1px solid var(--border);
-      padding: 5px 10px;
+      padding: 8px 12px;
       text-align: left;
+      word-break: break-word;
     }
-    #output th { background: var(--surface); color: var(--accent); }
-    #output tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
-    #output hr { border: none; border-top: 1px solid var(--border); margin: 1em 0; }
+    #output th {
+      background: var(--surface);
+      color: var(--text-dim);
+      font-weight: 500;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    #output tr:nth-child(even) td { background: rgba(255, 255, 255, 0.015); }
+    #output hr { border: none; border-top: 1px solid var(--border); margin: 1.5em 0; }
 
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    /* ---------- Reports sidebar ---------- */
+    .reports-panel {
+      width: 220px;
+      min-width: 220px;
+      flex-shrink: 0;
+      border-left: 1px solid var(--border);
+      padding: 16px 14px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .reports-panel.hidden { display: none; }
+    .reports-panel .label { margin-bottom: 0; }
+
+    .reports-list { display: flex; flex-direction: column; gap: 4px; }
+
+    .report-item-row { display: flex; gap: 4px; }
+    .report-item {
+      flex: 1;
+      padding: 8px 10px;
+      border: 1px solid transparent;
+      border-radius: 5px;
+      background: transparent;
+      text-align: left;
+      transition: all 0.12s;
+      min-width: 0;
+    }
+    .report-item:hover { background: var(--surface); }
+    .report-item.active {
+      background: var(--accent-dim);
+      border-color: rgba(167, 139, 250, 0.3);
+    }
+    .report-name {
+      font-size: 11.5px;
+      color: var(--text);
+      line-height: 1.35;
+      word-break: break-word;
+      text-transform: capitalize;
+    }
+    .report-item.active .report-name { color: var(--text); }
+    .report-meta {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: var(--muted);
+      margin-top: 3px;
+      letter-spacing: 0.3px;
+    }
+    .report-item.active .report-meta { color: var(--accent); }
+
+    .pdf-btn {
+      flex-shrink: 0;
+      padding: 0 8px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: transparent;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      transition: all 0.12s;
+    }
+    .pdf-btn:hover:not(.loading) { border-color: var(--accent); color: var(--accent); }
+    .pdf-btn.loading { opacity: 0.4; pointer-events: none; }
+
+    .no-reports {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--muted);
+      padding: 8px 2px;
+    }
+
+    /* ---------- Scrollbar ---------- */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 900px) {
+      main { grid-template-columns: 1fr; }
+      .panel { border-right: none; border-bottom: 1px solid var(--border); max-height: 50vh; }
+      .reports-panel { width: 180px; min-width: 180px; }
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">career<span>-</span>ops</div>
-  <div class="badge">local</div>
+  <div class="logo">career<span class="dim">·</span>ops</div>
+  <div class="tag">local</div>
   <div class="health">
     <span id="client-count">0 clients</span>
     <div class="dot ok" id="health-dot"></div>
@@ -342,100 +549,126 @@
 </header>
 
 <main>
-  <!-- Left panel: inputs -->
+  <!-- Left panel -->
   <div class="panel">
-    <div class="panel-label">Client</div>
-    <div class="client-bar">
-      <select id="client-select">
-        <option value="">— Ad-hoc (no client) —</option>
-      </select>
-      <button class="btn-small" id="new-client-btn" type="button">+ New</button>
-      <button class="btn-small" id="edit-client-btn" type="button" disabled>Edit</button>
-      <button class="btn-small danger" id="delete-client-btn" type="button" disabled>Delete</button>
-    </div>
-
-    <div class="panel-label">Mode</div>
-    <div class="tabs">
-      <button class="tab active" data-mode="evaluate">Evaluate</button>
-      <button class="tab" data-mode="compare">Compare</button>
-      <button class="tab" data-mode="interview">Interview</button>
-    </div>
-
-    <div id="fields-evaluate">
-      <div class="cv-label-row">
-        <label>Candidate CV</label>
-        <button class="upload-btn" type="button" onclick="triggerPdfUpload('cv-input', this)">upload PDF</button>
+    <div class="field">
+      <label>Client</label>
+      <div class="client-bar">
+        <select id="client-select"><option value="">Ad-hoc (no client)</option></select>
+        <button class="btn" id="new-client-btn" type="button" title="New client">+</button>
+        <button class="btn" id="edit-client-btn" type="button" disabled title="Edit">✎</button>
+        <button class="btn danger" id="delete-client-btn" type="button" disabled title="Delete">×</button>
       </div>
-      <textarea id="cv-input" placeholder="Paste CV here, or pick a client above…"></textarea>
-
-      <label>Company (optional — used to name the report file)</label>
-      <input type="text" id="company-eval" placeholder="e.g. Stripe" />
-
-      <label>Job Description or URL</label>
-      <textarea id="jd-input" placeholder="Paste the full JD text, or a job URL..."></textarea>
     </div>
 
-    <div id="fields-compare" style="display:none">
-      <div class="cv-label-row">
-        <label>Your CV</label>
-        <button class="upload-btn" type="button" onclick="triggerPdfUpload('cv-compare', this)">upload PDF</button>
+    <div class="field">
+      <label>Mode</label>
+      <div class="segmented">
+        <button class="active" data-mode="evaluate" type="button">Evaluate</button>
+        <button data-mode="compare" type="button">Compare</button>
+        <button data-mode="interview" type="button">Interview</button>
       </div>
-      <textarea id="cv-compare" placeholder="Paste your CV here…"></textarea>
-
-      <label>Job Descriptions (separate each JD with --- on its own line)</label>
-      <textarea id="jds-compare" style="min-height:200px" placeholder="--- JD 1 ---&#10;Paste first JD here...&#10;&#10;--- JD 2 ---&#10;Paste second JD here..."></textarea>
     </div>
 
-    <div id="fields-interview" style="display:none">
-      <div class="cv-label-row">
-        <label>Your CV</label>
-        <button class="upload-btn" type="button" onclick="triggerPdfUpload('cv-interview', this)">upload PDF</button>
-      </div>
-      <textarea id="cv-interview" placeholder="Paste your CV here…"></textarea>
-
-      <div class="row">
-        <div>
-          <label>Company</label>
-          <input type="text" id="company-input" placeholder="e.g. Stripe" />
+    <div class="fields-wrap">
+      <!-- Evaluate -->
+      <div id="fields-evaluate" class="mode-fields" style="display:flex">
+        <div class="field">
+          <div class="label-row">
+            <label>Candidate CV</label>
+            <button class="btn-upload" type="button" onclick="triggerPdfUpload('cv-input', this)">upload pdf</button>
+          </div>
+          <textarea id="cv-input" placeholder="Paste CV, or pick a client above…"></textarea>
         </div>
-        <div>
-          <label>Role</label>
-          <input type="text" id="role-input" placeholder="e.g. Senior PM" />
+
+        <div class="field">
+          <label>Company <span style="color:var(--muted);text-transform:none;letter-spacing:0">— optional, names the report</span></label>
+          <input type="text" id="company-eval" placeholder="e.g. Stripe">
+        </div>
+
+        <div class="field grow">
+          <label>Job Description or URL</label>
+          <textarea id="jd-input" placeholder="Paste JD text, or a URL…"></textarea>
         </div>
       </div>
 
-      <label>Job Description (optional but recommended)</label>
-      <textarea id="jd-interview" placeholder="Paste JD for better accuracy..."></textarea>
+      <!-- Compare -->
+      <div id="fields-compare" class="mode-fields" style="display:none">
+        <div class="field">
+          <div class="label-row">
+            <label>Your CV</label>
+            <button class="btn-upload" type="button" onclick="triggerPdfUpload('cv-compare', this)">upload pdf</button>
+          </div>
+          <textarea id="cv-compare" placeholder="Paste your CV…"></textarea>
+        </div>
+
+        <div class="field grow">
+          <label>Job Descriptions <span style="color:var(--muted);text-transform:none;letter-spacing:0">— separate with <code style="font-family:var(--font-mono);background:var(--surface);padding:1px 5px;border-radius:3px">---</code></span></label>
+          <textarea id="jds-compare" placeholder="--- JD 1 ---
+Paste first JD…
+
+--- JD 2 ---
+Paste second JD…"></textarea>
+        </div>
+      </div>
+
+      <!-- Interview -->
+      <div id="fields-interview" class="mode-fields" style="display:none">
+        <div class="field">
+          <div class="label-row">
+            <label>Your CV</label>
+            <button class="btn-upload" type="button" onclick="triggerPdfUpload('cv-interview', this)">upload pdf</button>
+          </div>
+          <textarea id="cv-interview" placeholder="Paste your CV…"></textarea>
+        </div>
+
+        <div class="field">
+          <div class="row">
+            <div>
+              <label>Company</label>
+              <input type="text" id="company-input" placeholder="e.g. Stripe">
+            </div>
+            <div>
+              <label>Role</label>
+              <input type="text" id="role-input" placeholder="e.g. Senior PM">
+            </div>
+          </div>
+        </div>
+
+        <div class="field grow">
+          <label>Job Description <span style="color:var(--muted);text-transform:none;letter-spacing:0">— optional</span></label>
+          <textarea id="jd-interview" placeholder="Paste JD for better accuracy…"></textarea>
+        </div>
+      </div>
     </div>
 
-    <button class="run" id="run-btn">Run →</button>
-  </div>
-
-  <!-- Reports panel -->
-  <div class="reports-panel">
-    <div class="panel-label">Reports</div>
-    <div id="reports-list"><span class="no-reports">Select a client</span></div>
+    <div class="run-row">
+      <button class="btn-primary" id="run-btn">Run →</button>
+    </div>
   </div>
 
   <!-- New Client modal -->
   <div class="modal-backdrop" id="new-client-modal">
     <div class="modal">
       <h2>New Client</h2>
-      <label>Name *</label>
-      <input type="text" id="nc-name" placeholder="e.g. Budi Surya" />
-
-      <div class="cv-label-row">
-        <label>CV *</label>
-        <button class="upload-btn" type="button" onclick="triggerPdfUpload('nc-cv', this)">upload PDF</button>
+      <div class="field">
+        <label>Name</label>
+        <input type="text" id="nc-name" placeholder="e.g. Budi Surya">
       </div>
-      <textarea id="nc-cv" style="min-height: 160px" placeholder="Paste client's CV here…"></textarea>
-
-      <label>Profile notes (optional — archetype, deal-breakers, salary target)</label>
-      <textarea id="nc-profile" style="min-height: 90px" placeholder="Leave empty to use default template..."></textarea>
-
+      <div class="field">
+        <div class="label-row">
+          <label>CV</label>
+          <button class="btn-upload" type="button" onclick="triggerPdfUpload('nc-cv', this)">upload pdf</button>
+        </div>
+        <textarea id="nc-cv" placeholder="Paste client's CV…"></textarea>
+      </div>
+      <div class="field">
+        <label>Profile notes <span style="color:var(--muted);text-transform:none;letter-spacing:0">— optional</span></label>
+        <textarea id="nc-profile" style="min-height:80px" placeholder="Archetype, deal-breakers, salary target…"></textarea>
+      </div>
       <div class="actions">
-        <button type="button" id="nc-cancel">Cancel</button>
-        <button type="button" class="primary" id="nc-save">Create</button>
+        <button type="button" class="btn" id="nc-cancel">Cancel</button>
+        <button type="button" class="btn-primary" style="width:auto;padding:8px 18px" id="nc-save">Create</button>
       </div>
     </div>
   </div>
@@ -444,32 +677,42 @@
   <div class="modal-backdrop" id="edit-client-modal">
     <div class="modal">
       <h2>Edit Client</h2>
-      <label>CV</label>
-      <div class="cv-label-row" style="margin-top:0; margin-bottom:5px;">
-        <span style="font-size:11px;color:var(--muted)">CV</span>
-        <button class="upload-btn" type="button" onclick="triggerPdfUpload('ec-cv', this)">upload PDF</button>
+      <div class="field">
+        <div class="label-row">
+          <label>CV</label>
+          <button class="btn-upload" type="button" onclick="triggerPdfUpload('ec-cv', this)">upload pdf</button>
+        </div>
+        <textarea id="ec-cv" placeholder="CV content…"></textarea>
       </div>
-      <textarea id="ec-cv" style="min-height: 160px" placeholder="CV content…"></textarea>
-
-      <label>Profile notes</label>
-      <textarea id="ec-profile" style="min-height: 90px" placeholder="Archetypes, deal-breakers, salary target…"></textarea>
-
+      <div class="field">
+        <label>Profile notes</label>
+        <textarea id="ec-profile" style="min-height:80px" placeholder="Archetype, deal-breakers, salary target…"></textarea>
+      </div>
       <div class="actions">
-        <button type="button" id="ec-cancel">Cancel</button>
-        <button type="button" class="primary" id="ec-save">Save</button>
+        <button type="button" class="btn" id="ec-cancel">Cancel</button>
+        <button type="button" class="btn-primary" style="width:auto;padding:8px 18px" id="ec-save">Save</button>
       </div>
     </div>
   </div>
 
-  <!-- Right panel: output -->
+  <!-- Output -->
   <div class="output-panel">
     <div class="output-header">
-      <span style="color:var(--muted);font-size:11px">Output</span>
-      <span class="status-pill" id="status-pill">idle</span>
-      <button class="copy-btn" id="copy-btn">copy</button>
+      <span class="label">Output</span>
+      <span class="pill" id="status-pill">idle</span>
+      <div class="spacer"></div>
+      <button class="btn ghost icon" id="toggle-reports-btn" title="Toggle reports">Reports</button>
+      <button class="btn ghost icon" id="export-pdf-btn" style="display:none" title="Export current report as PDF">PDF</button>
+      <button class="btn ghost icon" id="copy-btn">Copy</button>
     </div>
-    <div id="output">
-      <span class="placeholder">Results will appear here. Fill in the form and click Run →</span>
+    <div class="output-body">
+      <div id="output">
+        <span class="placeholder">Results will appear here. Fill in the form and click Run →</span>
+      </div>
+      <aside class="reports-panel hidden" id="reports-panel">
+        <div class="label">Reports</div>
+        <div class="reports-list" id="reports-list"><span class="no-reports">Select a client</span></div>
+      </aside>
     </div>
   </div>
 </main>
@@ -482,8 +725,8 @@
   _pdfInput.style.display = 'none';
   document.body.appendChild(_pdfInput);
 
-  let _pdfTarget = null; // textarea id
-  let _pdfBtn = null;    // button element
+  let _pdfTarget = null;
+  let _pdfBtn = null;
 
   function triggerPdfUpload(textareaId, btn) {
     _pdfTarget = textareaId;
@@ -505,10 +748,10 @@
       if (!res.ok) throw new Error(json.error || 'parse error');
       document.getElementById(_pdfTarget).value = json.text.trim();
       _pdfBtn.textContent = '✓ loaded';
-      setTimeout(() => { _pdfBtn.textContent = 'upload PDF'; }, 2000);
+      setTimeout(() => { _pdfBtn.textContent = 'upload pdf'; }, 2000);
     } catch (e) {
       alert('PDF parse failed: ' + e.message);
-      _pdfBtn.textContent = 'upload PDF';
+      _pdfBtn.textContent = 'upload pdf';
     }
     _pdfBtn.classList.remove('loading');
   });
@@ -516,11 +759,11 @@
   // ---------- Client management ----------
   const clientSelect = document.getElementById('client-select');
   const clientCountLabel = document.getElementById('client-count');
-  let currentClient = null; // { slug, name, cv, profile }
+  let currentClient = null;
 
   async function loadClients(selectSlug = null) {
     const list = await fetch('/api/clients').then(r => r.json()).catch(() => []);
-    clientSelect.innerHTML = '<option value="">— Ad-hoc (no client) —</option>'
+    clientSelect.innerHTML = '<option value="">Ad-hoc (no client)</option>'
       + list.map(c => `<option value="${c.slug}">${c.name}</option>`).join('');
     clientCountLabel.textContent = list.length + ' client' + (list.length === 1 ? '' : 's');
     if (selectSlug) clientSelect.value = selectSlug;
@@ -536,10 +779,7 @@
     editBtn.disabled = !hasClient;
     deleteBtn.disabled = !hasClient;
     loadReports(slug);
-    if (!slug) {
-      currentClient = null;
-      return;
-    }
+    if (!slug) { currentClient = null; return; }
     currentClient = await fetch('/api/clients/' + slug).then(r => r.json());
     if (currentClient && currentClient.cv) {
       document.getElementById('cv-input').value = currentClient.cv;
@@ -550,19 +790,16 @@
 
   clientSelect.addEventListener('change', onClientChange);
 
-  // ---------- Edit client ----------
+  // Edit client
   const ecModal = document.getElementById('edit-client-modal');
-
   editBtn.addEventListener('click', () => {
     if (!currentClient) return;
     document.getElementById('ec-cv').value = currentClient.cv || '';
     document.getElementById('ec-profile').value = currentClient.profile || '';
     ecModal.classList.add('open');
   });
-
   document.getElementById('ec-cancel').addEventListener('click', () => ecModal.classList.remove('open'));
   ecModal.addEventListener('click', (e) => { if (e.target === ecModal) ecModal.classList.remove('open'); });
-
   document.getElementById('ec-save').addEventListener('click', async () => {
     if (!currentClient) return;
     const cv = document.getElementById('ec-cv').value;
@@ -579,20 +816,67 @@
 
   // ---------- Reports ----------
   const reportsList = document.getElementById('reports-list');
+  const reportsPanel = document.getElementById('reports-panel');
+  const toggleReportsBtn = document.getElementById('toggle-reports-btn');
+  const exportPdfBtn = document.getElementById('export-pdf-btn');
+  let activeReportFile = null;
+
+  async function downloadReportPdf(slug, filename, btn) {
+    const original = btn.textContent;
+    btn.textContent = '…';
+    btn.classList.add('loading');
+    try {
+      const res = await fetch(`/api/clients/${slug}/reports/${filename}/pdf`, { method: 'POST' });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: 'unknown error' }));
+        alert('PDF failed: ' + err.error);
+        return;
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename.replace(/\.md$/, '.pdf');
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      alert('PDF failed: ' + e.message);
+    } finally {
+      btn.textContent = original;
+      btn.classList.remove('loading');
+    }
+  }
 
   async function loadReports(slug) {
     reportsList.innerHTML = '<span class="no-reports">Loading…</span>';
-    if (!slug) { reportsList.innerHTML = '<span class="no-reports">Select a client</span>'; return; }
+    activeReportFile = null;
+    exportPdfBtn.style.display = 'none';
+    if (!slug) {
+      reportsList.innerHTML = '<span class="no-reports">Select a client</span>';
+      reportsPanel.classList.add('hidden');
+      toggleReportsBtn.classList.remove('active');
+      return;
+    }
     const reports = await fetch(`/api/clients/${slug}/reports`).then(r => r.json()).catch(() => []);
-    if (!reports.length) { reportsList.innerHTML = '<span class="no-reports">No reports yet</span>'; return; }
+    if (!reports.length) {
+      reportsList.innerHTML = '<span class="no-reports">No reports yet</span>';
+      reportsPanel.classList.add('hidden');
+      toggleReportsBtn.classList.remove('active');
+      return;
+    }
+    reportsPanel.classList.remove('hidden');
+    toggleReportsBtn.classList.add('active');
     reportsList.innerHTML = reports.map(r => {
       const label = r.filename.replace(/^\d+-/, '').replace(/-\d{4}-\d{2}-\d{2}\.md$/, '').replace(/-/g, ' ');
       const date = (r.filename.match(/(\d{4}-\d{2}-\d{2})/) || [])[1] || '';
-      const meta = [r.score ? `Score ${r.score}` : '', date].filter(Boolean).join(' · ');
-      return `<button class="report-item" data-file="${r.filename}" title="${r.filename}">
-        <div class="report-name">${label}</div>
-        ${meta ? `<div class="report-meta">${meta}</div>` : ''}
-      </button>`;
+      const meta = [r.score ? `${r.score}` : '', date].filter(Boolean).join(' · ');
+      return `<div class="report-item-row">
+        <button class="report-item" data-file="${r.filename}" title="${r.filename}">
+          <div class="report-name">${label}</div>
+          ${meta ? `<div class="report-meta">${meta}</div>` : ''}
+        </button>
+        <button class="pdf-btn" data-file="${r.filename}" title="Export as PDF">PDF</button>
+      </div>`;
     }).join('');
 
     reportsList.querySelectorAll('.report-item').forEach(btn => {
@@ -601,15 +885,28 @@
         btn.classList.add('active');
         const slug = clientSelect.value;
         const file = btn.dataset.file;
+        activeReportFile = file;
+        exportPdfBtn.style.display = '';
         const text = await fetch(`/api/clients/${slug}/reports/${file}`).then(r => r.text());
         output.innerHTML = renderMarkdown(text);
         pill.textContent = 'report';
-        pill.className = 'status-pill done';
+        pill.className = 'pill done';
+      });
+    });
+
+    reportsList.querySelectorAll('.pdf-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        downloadReportPdf(clientSelect.value, btn.dataset.file, btn);
       });
     });
   }
 
-  // ---------- Delete client ----------
+  exportPdfBtn.addEventListener('click', () => {
+    if (!activeReportFile || !clientSelect.value) return;
+    downloadReportPdf(clientSelect.value, activeReportFile, exportPdfBtn);
+  });
+
+  // Delete client
   deleteBtn.addEventListener('click', async () => {
     if (!currentClient) return;
     if (!confirm(`Delete client "${currentClient.name}"? This cannot be undone.`)) return;
@@ -618,13 +915,13 @@
     await loadClients();
   });
 
-  // Health check + initial load
+  // Health check + init
   fetch('/api/health').then(r => r.json()).then(d => {
     document.getElementById('health-dot').className = 'dot ' + (d.ok ? 'ok' : 'warn');
   }).catch(() => {});
   loadClients();
 
-  // ---------- New client modal ----------
+  // New client modal
   const ncModal = document.getElementById('new-client-modal');
   document.getElementById('new-client-btn').addEventListener('click', () => {
     document.getElementById('nc-name').value = '';
@@ -634,7 +931,6 @@
   });
   document.getElementById('nc-cancel').addEventListener('click', () => ncModal.classList.remove('open'));
   ncModal.addEventListener('click', (e) => { if (e.target === ncModal) ncModal.classList.remove('open'); });
-
   document.getElementById('nc-save').addEventListener('click', async () => {
     const name = document.getElementById('nc-name').value.trim();
     const cv = document.getElementById('nc-cv').value.trim();
@@ -653,21 +949,21 @@
 
   // Tab switching
   let currentMode = 'evaluate';
-  document.querySelectorAll('.tab').forEach(tab => {
+  document.querySelectorAll('.segmented button').forEach(tab => {
     tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.segmented button').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
       currentMode = tab.dataset.mode;
-      ['evaluate','compare','interview'].forEach(m => {
-        document.getElementById('fields-' + m).style.display = m === currentMode ? 'block' : 'none';
+      ['evaluate', 'compare', 'interview'].forEach(m => {
+        document.getElementById('fields-' + m).style.display = m === currentMode ? 'flex' : 'none';
       });
     });
   });
 
-  // Simple markdown renderer (tables + headers + bold + code + hr)
+  // Markdown renderer
   function renderMarkdown(text) {
     return text
-      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/^### (.+)$/gm, '<h3>$1</h3>')
       .replace(/^## (.+)$/gm, '<h2>$1</h2>')
       .replace(/^# (.+)$/gm, '<h1>$1</h1>')
@@ -709,7 +1005,7 @@
 
     runBtn.disabled = true;
     pill.textContent = 'running';
-    pill.className = 'status-pill running';
+    pill.className = 'pill running';
     output.innerHTML = '';
 
     let raw = '';
@@ -739,7 +1035,6 @@
             raw += data;
             output.innerHTML = renderMarkdown(raw);
             output.scrollTop = output.scrollHeight;
-            // Auto-fill company field from streamed output if still empty
             if (currentMode === 'evaluate') {
               const companyField = document.getElementById('company-eval');
               if (!companyField.value) {
@@ -751,24 +1046,30 @@
             if (!raw) output.innerHTML = `<span class="placeholder">${data}</span>`;
           } else if (type === 'error') {
             pill.textContent = 'error';
-            pill.className = 'status-pill error';
+            pill.className = 'pill error';
             output.innerHTML += `<br><span style="color:var(--red)">Error: ${data}</span>`;
           } else if (type === 'saved') {
             output.innerHTML += `<br><span style="color:var(--green)">Saved → ${data}</span>`;
             if (clientSelect.value) loadReports(clientSelect.value);
           } else if (type === 'done') {
             pill.textContent = 'done';
-            pill.className = 'status-pill done';
+            pill.className = 'pill done';
           }
         }
       }
     } catch (e) {
       pill.textContent = 'error';
-      pill.className = 'status-pill error';
+      pill.className = 'pill error';
       output.innerHTML = `<span style="color:var(--red)">Connection error: ${e.message}</span>`;
     }
 
     runBtn.disabled = false;
+  });
+
+  // Toggle reports panel
+  toggleReportsBtn.addEventListener('click', () => {
+    reportsPanel.classList.toggle('hidden');
+    toggleReportsBtn.classList.toggle('active', !reportsPanel.classList.contains('hidden'));
   });
 
   // Copy
@@ -776,10 +1077,11 @@
     const text = output.innerText;
     navigator.clipboard.writeText(text).then(() => {
       const btn = document.getElementById('copy-btn');
-      btn.textContent = 'copied!';
-      setTimeout(() => btn.textContent = 'copy', 1500);
+      btn.textContent = 'Copied';
+      setTimeout(() => btn.textContent = 'Copy', 1500);
     });
   });
 </script>
+
 </body>
 </html>

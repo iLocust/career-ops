@@ -87,7 +87,7 @@ function nextReportNumber(clientDir) {
   return nums.length ? Math.max(...nums) + 1 : 1;
 }
 
-function buildPrompt(mode, cv, jd, extraContext, clientProfile) {
+function buildPrompt(mode, cv, jd, extraContext, clientProfile, clientDir) {
   const shared = readFileIfExists(join(__dirname, 'modes/_shared.md'));
   const profile = clientProfile
     || readFileIfExists(join(__dirname, 'modes/_profile.md'))
@@ -98,14 +98,43 @@ function buildPrompt(mode, cv, jd, extraContext, clientProfile) {
   else if (mode === 'compare') modeInstructions = readFileIfExists(join(__dirname, 'modes/ofertas.md'));
   else if (mode === 'interview') modeInstructions = readFileIfExists(join(__dirname, 'modes/interview-prep.md'));
 
-  return [
+  const parts = [
     '# System Context', shared,
     '# Candidate Profile', profile,
     '# Candidate CV', cv,
     '# Mode Instructions', modeInstructions,
-    '# Task', extraContext || '',
-    jd ? `# Job Description / Input\n${jd}` : '',
-  ].filter(Boolean).join('\n\n');
+  ];
+
+  // For interview mode, inject supporting context that Claude cannot read from disk
+  if (mode === 'interview') {
+    const storyBank = clientDir
+      ? readFileIfExists(join(clientDir, 'story-bank.md'))
+      : readFileIfExists(join(__dirname, 'interview-prep/story-bank.md'));
+    if (storyBank) {
+      parts.push('# Existing Story Bank (already prepared — use these for mapping in Step 5)', storyBank);
+    } else {
+      parts.push('# Existing Story Bank', 'None yet — flag all gaps in Step 5 so the user can draft them.');
+    }
+
+    const articleDigest = readFileIfExists(join(__dirname, 'article-digest.md'));
+    if (articleDigest) parts.push('# Article Digest / Proof Points', articleDigest);
+
+    parts.push(
+      '# IMPORTANT — Headless Mode Constraints',
+      [
+        'You are running in headless mode (no filesystem access, no interactive tools beyond WebSearch/WebFetch).',
+        'All relevant context (CV, profile, story bank) has been injected above — do NOT attempt to read files.',
+        'Do NOT attempt to write or save files — the server handles saving automatically after you finish.',
+        'Do NOT narrate plans like "I will now research..." — just do the research and write the report directly.',
+        'Complete the full report in a single response. Do not loop or repeat yourself.',
+      ].join('\n'),
+    );
+  }
+
+  parts.push('# Task', extraContext || '');
+  if (jd) parts.push(`# Job Description / Input\n${jd}`);
+
+  return parts.filter(Boolean).join('\n\n');
 }
 
 // ---------- Client management ----------
@@ -216,7 +245,7 @@ app.post('/api/evaluate', (req, res) => {
     extraContext = `Prepare interview intel for: ${company} — ${role}`;
   }
 
-  const prompt = buildPrompt(mode, cv, jd, extraContext, clientProfile);
+  const prompt = buildPrompt(mode, cv, jd, extraContext, clientProfile, clientDir);
 
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
@@ -229,13 +258,14 @@ app.post('/api/evaluate', (req, res) => {
 
   send('status', 'Claude is thinking...');
 
+  const effort = mode === 'interview' ? 'low' : 'low';
   const proc = spawn('claude', [
     '-p',
     '--output-format', 'stream-json',
     '--verbose',
     '--dangerously-skip-permissions',
     '--model', 'haiku',
-    '--effort', 'low',
+    '--effort', effort,
     '--tools', 'WebSearch,WebFetch',
   ], {
     cwd: __dirname,
@@ -338,6 +368,33 @@ app.post('/api/evaluate', (req, res) => {
   res.on('close', () => {
     if (!res.writableEnded) proc.kill();
   });
+});
+
+// ---------- Report PDF ----------
+
+app.post('/api/clients/:slug/reports/:filename/pdf', async (req, res) => {
+  const { slug, filename } = req.params;
+  if (!filename.endsWith('.md')) return res.status(400).json({ error: 'not a .md file' });
+
+  const mdPath = join(CLIENTS_DIR, slug, 'reports', filename);
+  if (!existsSync(mdPath)) return res.status(404).json({ error: 'report not found' });
+
+  const pdfFilename = filename.replace(/\.md$/, '.pdf');
+  const pdfPath = join(CLIENTS_DIR, slug, 'reports', pdfFilename);
+
+  try {
+    await new Promise((resolve, reject) => {
+      const proc = spawn('node', [join(__dirname, 'generate-report-pdf.mjs'), mdPath, pdfPath], {
+        cwd: __dirname,
+        env: { ...process.env },
+      });
+      proc.on('exit', code => code === 0 ? resolve() : reject(new Error(`exited with code ${code}`)));
+      proc.on('error', reject);
+    });
+    res.download(pdfPath, pdfFilename);
+  } catch (e) {
+    res.status(500).json({ error: 'PDF generation failed: ' + e.message });
+  }
 });
 
 // ---------- Health ----------
