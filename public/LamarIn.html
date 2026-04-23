@@ -83,7 +83,7 @@ const WA = 'https://wa.me/6281234567890?text=Halo%20LamarIn%2C%20saya%20mau%20or
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const SERVICES = [
   { k:'01', name:'CV Optimization',       price:'Rp 49.000', unit:'/ CV',           tagline:'CV asal-jadi jadi siap kirim.',            bullets:['Restrukturisasi konten yang berantakan','Highlight pencapaian yang tersembunyi','Format ATS-friendly + enak dibaca manusia','Output: PDF CV baru, siap kirim'] },
-  { k:'02', name:'Evaluasi Lowongan',     price:'Rp 35.000', unit:'/ lowongan',      tagline:'Lowongan ini worth dilamar atau skip?',    bullets:['Tabel Match CV vs persyaratan (✅ / ⚠️ / ❌)','Analisis gap + strategi mitigasi di cover letter','Estimasi gaji market (JobStreet, Glassdoor, PayScale)','Skor fit 1–5 + rekomendasi apply / skip','Verifikasi legitimasi — bukan ghost job'] },
+  { k:'02', name:'Evaluasi Lowongan',     price:'Rp 35.000', unit:'/ lowongan',      tagline:'Worth dilamar — dan CV-mu sudah siap kirim.',    bullets:['Tabel Match CV vs persyaratan (✅ / ⚠️ / ❌)','Analisis gap + strategi mitigasi di cover letter','Estimasi gaji market (JobStreet, Glassdoor, PayScale)','Skor fit 1–5 + rekomendasi apply / skip','Verifikasi legitimasi — bukan ghost job','CV di-tailoring khusus role ini — PDF siap kirim'], dual:true },
   { k:'03', name:'Perbandingan Lowongan', price:'Rp 79.000', unit:'/ 2–5 lowongan', tagline:'Bingung pilih? Kami yang rangking.',        bullets:['Matriks 10 dimensi: gaji, growth, culture, tech stack…','Ranking final + alasan','Red flag tiap lowongan','Next step konkret per pilihan'] },
   { k:'04', name:'Interview Ready',       price:'Rp 89.000', unit:'/ 1 perusahaan', tagline:'Masuk interview tanpa tebak-tebakan.',     bullets:['Overview proses hiring & estimasi timeline','6+ pertanyaan teknis + jawaban dari CV kamu','Behavioral questions (STAR) siap pakai','Strategi negosiasi gaji — angka spesifik'] },
 ];
@@ -97,13 +97,14 @@ const PACKAGES = [
 const STEPS = [
   { n:'01', t:'Kirim CV & brief', d:'Kirim CV (format apapun) + link lowongan / nama perusahaan via WhatsApp. Bayar sesuai paket.' },
   { n:'02', t:'Kami proses',      d:'Tim + AI research multi-source: JobStreet, LinkedIn, Glassdoor, PayScale, forum komunitas.' },
-  { n:'03', t:'Terima PDF',       d:'Dalam 1–6 jam, PDF laporan profesional masuk WhatsApp / Email / Google Drive kamu.' },
+  { n:'03', t:'Terima hasilnya',  d:'Dalam 1–6 jam, hasil masuk ke WhatsApp kamu. Paket Evaluasi: dapat 2 PDF — laporan analisis + CV yang sudah di-tailoring untuk role itu. Siap kirim ke rekruter.' },
 ];
 const WHY = [
-  { t:'AI + human review',     d:'Draft dibikin AI, di-review manusia. Bukan output mentah ChatGPT yang sering ngarang.' },
-  { t:'Multi-source research', d:'Data dari JobStreet, LinkedIn, Glassdoor, PayScale, Indeed, plus forum komunitas Indonesia.' },
-  { t:'Cepat — 1–6 jam',      d:'Pesan pagi, hasil siang. Cocok buat lowongan closing dalam hitungan hari.' },
-  { t:'Privasi dijaga',        d:'CV & data kamu gak dibagi ke pihak ketiga. Dihapus dari server setelah pesanan selesai.' },
+  { t:'AI + human review',        d:'Draft dibikin AI, di-review manusia. Bukan output mentah ChatGPT yang sering ngarang.' },
+  { t:'Multi-source research',    d:'Data dari JobStreet, LinkedIn, Glassdoor, PayScale, Indeed, plus forum komunitas Indonesia.' },
+  { t:'CV di-tailoring per role', d:'Bukan CV generik. Setiap Evaluasi menghasilkan CV yang disesuaikan kata per kata dengan persyaratan JD-nya — langsung siap kirim.', highlight:true },
+  { t:'Cepat — 1–6 jam',         d:'Pesan pagi, hasil siang. Cocok buat lowongan closing dalam hitungan hari.' },
+  { t:'Privasi dijaga',           d:'CV & data kamu gak dibagi ke pihak ketiga. Dihapus dari server setelah pesanan selesai.' },
 ];
 const FAQS = [
   { q:'Hasilnya dikirim dalam format apa?',      a:'PDF profesional, dikirim via WhatsApp, Email, atau Google Drive — pilih salah satu. File bisa langsung dicetak atau dikirim ke rekruter.' },
@@ -183,7 +184,7 @@ function Nav() {
     return () => window.removeEventListener('scroll', fn);
   }, []);
 
-  const links = ['Layanan','Cara Kerja','Sample','Harga','FAQ'];
+  const links = ['Layanan','Cara Kerja','Transformasi','Sample','Harga','FAQ'];
 
   return (
     <nav id="site-nav" className={scrolled?'scrolled':''} style={{ position:'sticky', top:0, zIndex:100, background:'rgba(250,250,247,.92)', backdropFilter:'blur(14px)', borderBottom:`1px solid ${C.hair}` }}>
@@ -231,7 +232,10 @@ function HeroCard() {
       <div style={{ position:'absolute', top:54, right:0, width:'95%', maxWidth:420, transform:'rotate(-2deg)', background:'#fff', borderRadius:16, padding:20, boxShadow:'0 24px 56px rgba(11,18,32,.14)', border:`1px solid ${C.hair}` }}>
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start' }}>
           <div>
-            <div className="mono" style={{ fontSize:9.5, color:C.dim, letterSpacing:'.1em', textTransform:'uppercase' }}>Laporan Evaluasi</div>
+            <div style={{ display:'flex', alignItems:'center', gap:7 }}>
+              <div className="mono" style={{ fontSize:9.5, color:C.dim, letterSpacing:'.1em', textTransform:'uppercase' }}>Laporan Evaluasi</div>
+              <span className="mono" style={{ fontSize:8.5, padding:'2px 6px', borderRadius:4, background:C.accent, color:'#fff', letterSpacing:'.06em', fontWeight:700, flexShrink:0 }}>+CV</span>
+            </div>
             <div className="sans" style={{ fontSize:16, fontWeight:700, marginTop:3 }}>Full Stack Developer ERP</div>
             <div className="sans" style={{ fontSize:12, color:C.dim }}>PT Manufaktur · Surabaya</div>
           </div>
@@ -259,7 +263,7 @@ function HeroCard() {
         <div style={{ width:32, height:32, borderRadius:32, background:'#25D366', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}><IcoWA c="#fff" s={18}/></div>
         <div>
           <div className="sans" style={{ fontSize:11, fontWeight:600, color:C.ink }}>LamarIn</div>
-          <div className="sans" style={{ fontSize:10.5, color:C.dim }}>PDF laporan kamu udah ready ✨</div>
+          <div className="sans" style={{ fontSize:10.5, color:C.dim }}>2 PDF kamu udah ready ✨</div>
         </div>
       </div>
     </div>
@@ -353,8 +357,15 @@ function Services() {
         </div>
         <div style={{ display:'grid', gridTemplateColumns:mobile?'1fr':'repeat(2,1fr)', gap:20 }}>
           {SERVICES.map((s) => (
-            <div key={s.k} style={{ background:'#fff', borderRadius:18, padding:26, border:`1px solid ${C.hair}`, display:'flex', flexDirection:'column' }}>
-              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:8 }}>
+            <div key={s.k} style={{ background:'#fff', borderRadius:18, padding:26, border:s.dual?`2px solid ${C.primary}`:`1px solid ${C.hair}`, display:'flex', flexDirection:'column', position:'relative', overflow:'hidden' }}>
+              {s.dual && (
+                <div style={{ position:'absolute', top:0, right:0, display:'flex', alignItems:'center', gap:5, padding:'6px 14px', background:C.primary, borderBottomLeftRadius:12 }}>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft:-5 }}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <span className="mono" style={{ fontSize:9.5, fontWeight:700, letterSpacing:'.08em', color:'#fff' }}>2 PDF SEKALIGUS</span>
+                </div>
+              )}
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:8, marginTop:s.dual?20:0 }}>
                 <div className="mono" style={{ padding:'4px 10px', borderRadius:6, background:C.primary, color:'#fff', fontSize:11, fontWeight:600, letterSpacing:'.1em' }}>{s.k}</div>
                 <div style={{ textAlign:'right' }}>
                   <div className="sans" style={{ fontSize:20, fontWeight:800, color:C.ink, letterSpacing:'-.015em' }}>{s.price}</div>
@@ -364,12 +375,15 @@ function Services() {
               <h3 className="sans" style={{ fontSize:20, fontWeight:700, color:C.ink, marginTop:4 }}>{s.name}</h3>
               <p className="serif" style={{ fontStyle:'italic', fontSize:15, color:C.primary, marginTop:4 }}>"{s.tagline}"</p>
               <ul style={{ marginTop:14, flex:1, listStyle:'none' }}>
-                {s.bullets.map((b,i) => (
-                  <li key={i} style={{ display:'flex', gap:9, alignItems:'flex-start', marginBottom:7 }}>
-                    <span style={{ paddingTop:2 }}><IcoCheck/></span>
-                    <span className="sans" style={{ fontSize:13.5, color:C.ink2, lineHeight:1.5 }}>{b}</span>
-                  </li>
-                ))}
+                {s.bullets.map((b,i) => {
+                  const isNew = s.dual && i === s.bullets.length - 1;
+                  return (
+                    <li key={i} style={{ display:'flex', gap:9, alignItems:'flex-start', marginBottom:isNew?0:7, ...(isNew ? { marginTop:12, padding:'8px 11px', background:C.primarySoft, borderRadius:9, border:`1px solid ${C.primary}22` } : {}) }}>
+                      <span style={{ paddingTop:2, flexShrink:0 }}><IcoCheck c={isNew?C.primary:C.primary}/></span>
+                      <span className="sans" style={{ fontSize:13.5, color:isNew?C.primary:C.ink2, lineHeight:1.5, fontWeight:isNew?600:400 }}>{b}</span>
+                    </li>
+                  );
+                })}
               </ul>
               <div style={{ marginTop:16, paddingTop:14, borderTop:`1px dashed ${C.hair}` }}>
                 <Btn href={WA} sm block primary icon={<IcoWA c="#fff" s={14}/>}>Order {s.name}</Btn>
@@ -536,11 +550,419 @@ function SampleIntv() {
   );
 }
 
+// ─── CV Transform ─────────────────────────────────────────────────────────────
+const CV_SLIDES = [
+  {
+    id: 'it',
+    label: 'IT / Dev',
+    jdTitle: 'Full Stack Developer ERP',
+    jdCompany: 'PT Manufaktur Nusantara · Surabaya · Hybrid',
+    jdReqs: [
+      { t:'React.js',          must:true  },
+      { t:'Node.js / Backend', must:true  },
+      { t:'SQL / RDBMS',       must:true  },
+      { t:'API Development',   must:true  },
+      { t:'C# / .NET',         must:false },
+    ],
+    personName: 'Arif Santoso',
+    personTitle: 'Full Stack Developer · Surabaya',
+    personContact: 'arif.santoso@email.com · linkedin.com/in/arifsantoso',
+    beforeFile: 'cv-lama.pdf',
+    afterFile: 'cv-tailored-erp.pdf',
+    beforeSummary: 'Saya seorang developer web berpengalaman 3 tahun di bidang web development dengan keahlian berbagai teknologi modern.',
+    beforeSummaryIssue: 'Generik — bisa ditulis siapa saja',
+    beforeRole: 'Full Stack Developer',
+    beforePeriod: 'Jan 2022 – Kini',
+    beforeCompany: 'PT Solusi Digital Nusantara · Surabaya',
+    beforeBullets: [
+      { t:'Pernah menggunakan React dan Node.js untuk beberapa project web perusahaan.', issue:'Tidak ada angka atau bukti konkret' },
+      { t:'Memiliki pengalaman menggunakan MySQL di beberapa project sebelumnya.', issue:'Requirement wajib JD — tapi tersembunyi!' },
+      { t:'Bekerja sama dengan tim untuk mengembangkan fitur-fitur baru sesuai kebutuhan.', issue:'Tidak relevan dengan role ini' },
+    ],
+    beforeSkills: ['React.js','Node.js','MySQL','JavaScript','Git','HTML/CSS'],
+    afterSummary: (Hl) => <span>Full Stack Developer — spesialisasi <Hl>API-driven applications</Hl> dan <Hl>database-driven architecture</Hl>. 3 tahun production, <Hl>50k+ transaksi/bulan</Hl>.</span>,
+    afterSummaryMatch: 'Match: React.js + Node.js ✓',
+    afterRole: 'Full Stack Developer',
+    afterPeriod: 'Jan 2022 – Kini',
+    afterCompany: 'PT Solusi Digital Nusantara · Surabaya',
+    afterBullets: (Hl) => [
+      { t:<span>Membangun <Hl>REST API backend</Hl> Node.js+Express — 3 modul inventory, <Hl>50k+ transaksi/bulan</Hl>.</span>, match:'Match: API Development ✓' },
+      { t:<span>Desain <Hl>MySQL schema relasional</Hl> multi-cabang; query time turun <Hl>40%</Hl>.</span>, match:'Match: SQL / RDBMS ✓' },
+      { t:<span>Delivery 5 proyek <Hl>React.js</Hl> terintegrasi backend — termasuk modul pelaporan real-time.</span>, match:'Match: React.js ✓' },
+    ],
+    afterSkills: [['React.js ✓',true],['Node.js ✓',true],['MySQL / SQL ✓',true],['REST API ✓',true],['TypeScript',false],['Git',false]],
+  },
+  {
+    id: 'finance',
+    label: 'Finance',
+    jdTitle: 'Staff Akunting & Finance',
+    jdCompany: 'PT Sinar Makmur FMCG · Jakarta · On-site',
+    jdReqs: [
+      { t:'Laporan Keuangan',   must:true  },
+      { t:'Rekonsiliasi',       must:true  },
+      { t:'Microsoft Excel',    must:true  },
+      { t:'Akuntansi Biaya',    must:true  },
+      { t:'SAP / ERP',          must:false },
+    ],
+    personName: 'Dewi Rahayu',
+    personTitle: 'Staff Keuangan · Jakarta',
+    personContact: 'dewi.rahayu@email.com · linkedin.com/in/dewirahayu',
+    beforeFile: 'cv-lama.pdf',
+    afterFile: 'cv-tailored-finance.pdf',
+    beforeSummary: 'Saya memiliki latar belakang di bidang keuangan dan akuntansi serta familiar dengan laporan keuangan dan Microsoft Excel.',
+    beforeSummaryIssue: 'Generik — tidak ada angka, tidak ada bukti',
+    beforeRole: 'Staff Keuangan',
+    beforePeriod: 'Mar 2022 – Kini',
+    beforeCompany: 'CV Mitra Usaha Bersama · Jakarta',
+    beforeBullets: [
+      { t:'Membuat laporan keuangan bulanan untuk kebutuhan manajemen.', issue:'Tidak ada skala atau volume — rekruter tidak tahu seberapa besar' },
+      { t:'Melakukan rekonsiliasi bank dan pencatatan transaksi harian.', issue:'Requirement wajib JD — tapi tidak ada detail!' },
+      { t:'Membantu tim dalam kegiatan audit tahunan perusahaan.', issue:'Pasif — tidak menunjukkan kontribusi nyata' },
+    ],
+    beforeSkills: ['Microsoft Excel','Akuntansi','Laporan Keuangan','Pembukuan','Google Sheets'],
+    afterSummary: (Hl) => <span>Staff Keuangan — spesialisasi <Hl>rekonsiliasi multi-akun</Hl> dan <Hl>pelaporan keuangan bulanan</Hl>. 2 tahun di FMCG, <Hl>300+ transaksi/hari</Hl>, error rate &lt;0,1%.</span>,
+    afterSummaryMatch: 'Match: Laporan Keuangan + Rekonsiliasi ✓',
+    afterRole: 'Staff Keuangan',
+    afterPeriod: 'Mar 2022 – Kini',
+    afterCompany: 'CV Mitra Usaha Bersama · Jakarta',
+    afterBullets: (Hl) => [
+      { t:<span>Menyusun <Hl>laporan keuangan bulanan</Hl> — neraca, laba rugi, arus kas — untuk 3 entitas legal senilai Rp 2,5 M/bulan.</span>, match:'Match: Laporan Keuangan ✓' },
+      { t:<span>Rekonsiliasi <Hl>300+ transaksi/hari</Hl> antar 5 rekening bank; <Hl>error rate &lt;0,1%</Hl> selama 18 bulan.</span>, match:'Match: Rekonsiliasi ✓' },
+      { t:<span>Otomasi <Hl>pivot report Excel</Hl> — waktu pelaporan turun dari 3 hari jadi 4 jam per bulan.</span>, match:'Match: Microsoft Excel ✓' },
+    ],
+    afterSkills: [['Laporan Keuangan ✓',true],['Rekonsiliasi ✓',true],['Microsoft Excel ✓',true],['Akuntansi Biaya ✓',true],['SAP (basic)',false],['Google Sheets',false]],
+  },
+  {
+    id: 'marketing',
+    label: 'Marketing',
+    jdTitle: 'Digital Marketing Specialist',
+    jdCompany: 'Tokobaju.id · E-commerce Fashion · Remote',
+    jdReqs: [
+      { t:'Meta Ads / Instagram', must:true  },
+      { t:'Copywriting',          must:true  },
+      { t:'Analitik & Data',      must:true  },
+      { t:'Content Strategy',     must:true  },
+      { t:'TikTok Ads',           must:false },
+    ],
+    personName: 'Rini Agustina',
+    personTitle: 'Marketing Staff · Bandung',
+    personContact: 'rini.agustina@email.com · linkedin.com/in/riniagustina',
+    beforeFile: 'cv-lama.pdf',
+    afterFile: 'cv-tailored-marketing.pdf',
+    beforeSummary: 'Saya berpengalaman di bidang marketing digital, terbiasa mengelola media sosial dan membuat konten untuk berbagai platform.',
+    beforeSummaryIssue: 'Generik — bisa ditulis oleh siapa saja',
+    beforeRole: 'Social Media Staff',
+    beforePeriod: 'Jun 2022 – Kini',
+    beforeCompany: 'Distro Keren Bandung · Bandung',
+    beforeBullets: [
+      { t:'Mengelola akun Instagram dan membuat konten foto dan video untuk brand.', issue:'Tidak ada angka — berapa follower? Berapa reach?' },
+      { t:'Pernah menjalankan iklan berbayar di Meta untuk meningkatkan penjualan.', issue:'Requirement wajib JD — tapi tidak ada hasil!' },
+      { t:'Membuat caption dan konten promosi sesuai arahan tim manajemen.', issue:'Pasif — terkesan hanya eksekutor, bukan strategist' },
+    ],
+    beforeSkills: ['Instagram','Meta Ads','Canva','Copywriting','TikTok','Microsoft Word'],
+    afterSummary: (Hl) => <span>Digital Marketer — spesialisasi <Hl>Meta Ads performance</Hl> dan <Hl>organic growth strategy</Hl>. 2 tahun e-commerce fashion, <Hl>ROAS rata-rata 4,2×</Hl>, 0→18k followers.</span>,
+    afterSummaryMatch: 'Match: Meta Ads + Content Strategy ✓',
+    afterRole: 'Social Media & Ads Staff',
+    afterPeriod: 'Jun 2022 – Kini',
+    afterCompany: 'Distro Keren Bandung · Bandung',
+    afterBullets: (Hl) => [
+      { t:<span>Kelola <Hl>Meta Ads</Hl> budget Rp 8 jt/bulan — <Hl>ROAS rata-rata 4,2×</Hl>, konversi landing page naik 22% YoY.</span>, match:'Match: Meta Ads / Instagram ✓' },
+      { t:<span>Growth Instagram organik dari <Hl>0→18.000 followers</Hl> dalam 8 bulan via <Hl>content strategy</Hl> mingguan.</span>, match:'Match: Content Strategy ✓' },
+      { t:<span>Produksi 40+ <Hl>copywriting</Hl> caption/bulan — rata-rata engagement rate <Hl>6,8%</Hl> (benchmark industri: 3%).</span>, match:'Match: Copywriting ✓' },
+    ],
+    afterSkills: [['Meta Ads ✓',true],['Copywriting ✓',true],['Instagram Analytics ✓',true],['Content Strategy ✓',true],['TikTok Ads',false],['Canva',false]],
+  },
+];
+
+function CVTransform() {
+  const mobile = useResponsive();
+  const [slide, setSlide] = React.useState(0);
+  const [view, setView] = React.useState('before');
+
+  const s = CV_SLIDES[slide];
+
+  const SecHead = ({ title }) => (
+    <div style={{ fontFamily:'"JetBrains Mono",monospace', fontSize:8, letterSpacing:'.18em', textTransform:'uppercase', color:C.ink, borderBottom:`1.5px solid ${C.ink}`, paddingBottom:3, marginBottom:7, marginTop:13, fontWeight:600 }}>{title}</div>
+  );
+
+  const Pill = ({ children, good }) => (
+    <span style={{ fontFamily:'"JetBrains Mono",monospace', fontSize:9.5, padding:'2px 6px', borderRadius:3, background:good?'rgba(220,252,231,.7)':C.bgAlt, color:good?'#15803d':C.dim, border:good?'1px solid #86efac':'none', fontWeight:good?600:400 }}>{children}</span>
+  );
+
+  const Annot = ({ bad, children }) => (
+    <div style={{ display:'flex', gap:5, alignItems:'flex-start', marginTop:5, paddingLeft:2 }}>
+      <div style={{ width:14, height:14, borderRadius:7, background:bad?C.red:C.green, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, marginTop:1 }}>
+        <span style={{ color:'#fff', fontSize:8, fontWeight:800 }}>{bad?'!':'✓'}</span>
+      </div>
+      <span style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:10.5, color:bad?C.red:C.green, fontWeight:600, lineHeight:1.4 }}>{children}</span>
+    </div>
+  );
+
+  const Hl = ({ children }) => (
+    <mark style={{ background:'rgba(22,163,74,.18)', color:'#14532d', borderRadius:2, padding:'0 2px', fontWeight:700, fontStyle:'normal' }}>{children}</mark>
+  );
+
+  const PDFChrome = ({ filename, accent }) => (
+    <div style={{ padding:'7px 14px', background:'#f5f4f0', borderBottom:`1px solid ${C.hair}`, display:'flex', alignItems:'center', gap:8 }}>
+      <div style={{ display:'flex', gap:4 }}>
+        {['#e5484d','#f5a524','#30a46c'].map(col => <div key={col} style={{ width:8, height:8, borderRadius:8, background:col }}/>)}
+      </div>
+      <div style={{ flex:1 }}/>
+      <div style={{ fontFamily:'"JetBrains Mono",monospace', fontSize:9.5, color:accent||C.dim }}>{filename}</div>
+      <div style={{ flex:1 }}/>
+      <div style={{ fontFamily:'"JetBrains Mono",monospace', fontSize:9.5, color:C.dim }}>1 / 1</div>
+    </div>
+  );
+
+  const CVNameBlock = ({ muted }) => (
+    <div style={{ paddingBottom:10, marginBottom:2, borderBottom:`1.5px solid ${muted?'#e2e8f0':C.ink}` }}>
+      <div style={{ fontFamily:'"Instrument Serif",Georgia,serif', fontSize:19, fontWeight:700, color:muted?'#94a3b8':C.ink, letterSpacing:'-.01em', lineHeight:1.1 }}>{s.personName}</div>
+      <div style={{ fontFamily:'"JetBrains Mono",monospace', fontSize:9, color:muted?'#cbd5e1':C.dim, marginTop:4, lineHeight:1.7 }}>
+        {s.personTitle}<br/>{s.personContact}
+      </div>
+    </div>
+  );
+
+  const BeforeCV = () => (
+    <div style={{ borderRadius:14, overflow:'hidden', border:'1.5px solid #fca5a5', boxShadow:'0 4px 24px rgba(220,38,38,.08)' }}>
+      <PDFChrome filename={s.beforeFile} accent="#f87171"/>
+      <div style={{ background:'#fffbfb', padding:'22px 22px 18px', minHeight:460 }}>
+        <CVNameBlock muted/>
+        <SecHead title="Ringkasan Profesional"/>
+        <div style={{ borderLeft:'2.5px solid #fca5a5', paddingLeft:10, marginBottom:4 }}>
+          <p style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:11.5, color:'#94a3b8', lineHeight:1.7, margin:0 }}>{s.beforeSummary}</p>
+          <Annot bad>{s.beforeSummaryIssue}</Annot>
+        </div>
+        <SecHead title="Pengalaman"/>
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline', marginBottom:2 }}>
+          <span style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:12, fontWeight:700, color:'#94a3b8' }}>{s.beforeRole}</span>
+          <span style={{ fontFamily:'"JetBrains Mono",monospace', fontSize:9.5, color:'#cbd5e1' }}>{s.beforePeriod}</span>
+        </div>
+        <div style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:10.5, color:'#cbd5e1', marginBottom:8 }}>{s.beforeCompany}</div>
+        {s.beforeBullets.map((b,i) => (
+          <div key={i} style={{ borderLeft:'2.5px solid #fca5a5', paddingLeft:10, marginBottom:10 }}>
+            <div style={{ display:'flex', gap:6, alignItems:'flex-start' }}>
+              <span style={{ color:'#fca5a5', fontSize:10, flexShrink:0, marginTop:2 }}>▸</span>
+              <span style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:11, color:'#94a3b8', lineHeight:1.6 }}>{b.t}</span>
+            </div>
+            <Annot bad>{b.issue}</Annot>
+          </div>
+        ))}
+        <SecHead title="Skill"/>
+        <div style={{ display:'flex', flexWrap:'wrap', gap:5 }}>
+          {s.beforeSkills.map(sk => <Pill key={sk}>{sk}</Pill>)}
+        </div>
+      </div>
+    </div>
+  );
+
+  const AfterCV = () => {
+    const bullets = s.afterBullets(Hl);
+    return (
+      <div style={{ borderRadius:14, overflow:'hidden', border:'2px solid #86efac', boxShadow:'0 8px 32px rgba(22,163,74,.15)' }}>
+        <PDFChrome filename={s.afterFile} accent="#4ade80"/>
+        <div style={{ background:'#fff', padding:'22px 22px 18px', minHeight:460 }}>
+          <CVNameBlock/>
+          <SecHead title="Ringkasan Profesional"/>
+          <div style={{ borderLeft:'2.5px solid #4ade80', paddingLeft:10, marginBottom:4 }}>
+            <p style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:11.5, color:C.ink2, lineHeight:1.7, margin:0 }}>{s.afterSummary(Hl)}</p>
+            <Annot>{s.afterSummaryMatch}</Annot>
+          </div>
+          <SecHead title="Pengalaman"/>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline', marginBottom:2 }}>
+            <span style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:12, fontWeight:700, color:C.ink }}>{s.afterRole}</span>
+            <span style={{ fontFamily:'"JetBrains Mono",monospace', fontSize:9.5, color:C.dim }}>{s.afterPeriod}</span>
+          </div>
+          <div style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:10.5, color:C.dim, marginBottom:8 }}>{s.afterCompany}</div>
+          {bullets.map((b,i) => (
+            <div key={i} style={{ borderLeft:'2.5px solid #86efac', paddingLeft:10, marginBottom:10 }}>
+              <div style={{ display:'flex', gap:6, alignItems:'flex-start' }}>
+                <span style={{ color:'#4ade80', fontSize:10, flexShrink:0, marginTop:2 }}>▸</span>
+                <span style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:11, color:C.ink2, lineHeight:1.6 }}>{b.t}</span>
+              </div>
+              <Annot>{b.match}</Annot>
+            </div>
+          ))}
+          <SecHead title="Skill"/>
+          <div style={{ display:'flex', flexWrap:'wrap', gap:5 }}>
+            {s.afterSkills.map(([sk,g]) => <Pill key={sk} good={g}>{sk}</Pill>)}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <section id="transformasi" style={{ background:C.bgAlt, padding:'80px 0' }}>
+      <div style={{ maxWidth:1200, margin:'0 auto', padding:'0 24px' }}>
+
+        <div style={{ textAlign:'center', marginBottom:40 }}>
+          <Badge tone="green" style={{ marginBottom:14 }}>CV Tailoring — Cara Kerjanya</Badge>
+          <h2 className="sans" style={{ fontSize:'clamp(28px,4vw,46px)', fontWeight:800, letterSpacing:'-.028em', color:C.ink, lineHeight:1.05 }}>
+            Kamu kirim 1 JD.<br/>
+            <span style={{ color:C.primary }}>CV-mu keluar beda.</span>
+          </h2>
+          <p className="sans" style={{ fontSize:15, color:C.dim, marginTop:14, maxWidth:480, margin:'14px auto 0', lineHeight:1.65 }}>
+            Bukan cuma ganti kata. Kami reframe pengalamanmu agar berbicara langsung ke rekruter — pakai bahasa yang sama dengan JD-nya.
+          </p>
+        </div>
+
+        {/* Carousel nav */}
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, marginBottom:20 }}>
+          <button onClick={() => { setSlide((slide+CV_SLIDES.length-1)%CV_SLIDES.length); setView('before'); }}
+            style={{ width:36, height:36, borderRadius:18, border:`1.5px solid ${C.hair}`, background:'#fff', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:C.ink, fontSize:16, flexShrink:0 }}>‹</button>
+          <div style={{ display:'flex', gap:6, alignItems:'center' }}>
+            {CV_SLIDES.map((sl,i) => (
+              <button key={sl.id} onClick={() => { setSlide(i); setView('before'); }}
+                style={{ padding:'6px 14px', borderRadius:20, border:'none', cursor:'pointer', fontWeight:600, fontSize:12.5,
+                  background:i===slide?C.primary:'#fff', color:i===slide?'#fff':C.dim,
+                  fontFamily:'"Plus Jakarta Sans",sans-serif', transition:'all .15s',
+                  boxShadow:i===slide?`0 2px 8px rgba(30,64,175,.25)`:'none',
+                  border:i===slide?'none':`1px solid ${C.hair}` }}>
+                {sl.label}
+              </button>
+            ))}
+          </div>
+          <button onClick={() => { setSlide((slide+1)%CV_SLIDES.length); setView('before'); }}
+            style={{ width:36, height:36, borderRadius:18, border:`1.5px solid ${C.hair}`, background:'#fff', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:C.ink, fontSize:16, flexShrink:0 }}>›</button>
+        </div>
+
+        {/* JD card */}
+        <div style={{ background:C.ink, borderRadius:14, padding:'16px 20px', marginBottom:16, display:'flex', flexWrap:'wrap', gap:14, alignItems:'center' }}>
+          <div style={{ flex:'0 1 auto', minWidth:0 }}>
+            <div className="mono" style={{ fontSize:9, color:C.accent, letterSpacing:'.12em', textTransform:'uppercase', marginBottom:5 }}>Job Description diterima</div>
+            <div className="sans" style={{ fontSize:15, fontWeight:700, color:'#fff', lineHeight:1.2 }}>{s.jdTitle}</div>
+            <div className="sans" style={{ fontSize:11.5, color:'rgba(255,255,255,.45)', marginTop:3 }}>{s.jdCompany}</div>
+          </div>
+          <div style={{ display:'flex', flexWrap:'wrap', gap:7, flex:1, justifyContent:mobile?'flex-start':'flex-end', alignItems:'center' }}>
+            {s.jdReqs.map((r,i) => (
+              <span key={i} className="mono" style={{
+                fontSize:11, padding:'6px 12px', borderRadius:7,
+                background:r.must?'rgba(30,64,175,.4)':'transparent',
+                color:r.must?'#bfdbfe':'rgba(255,255,255,.28)',
+                border:r.must?'1px solid rgba(147,197,253,.22)':'1px solid rgba(255,255,255,.1)',
+                fontWeight:r.must?600:400,
+              }}>
+                <span style={{ marginRight:5, fontSize:9 }}>{r.must?'●':'○'}</span>{r.t}
+                {!r.must && <span style={{ marginLeft:5, fontSize:9, opacity:.5 }}>optional</span>}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Mobile: tab toggle */}
+        {mobile && (
+          <div style={{ display:'flex', marginBottom:12, background:'#fff', borderRadius:12, padding:4, border:`1px solid ${C.hair}` }}>
+            {[['before','CV Lama'],['after','CV Tailored']].map(([k,label]) => (
+              <button key={k} onClick={() => setView(k)} className="sans"
+                style={{ flex:1, padding:'10px', borderRadius:9, border:'none', cursor:'pointer', fontWeight:700, fontSize:13,
+                  background:view===k?(k==='before'?'#fee2e2':C.greenSoft):'transparent',
+                  color:view===k?(k==='before'?'#991b1b':'#14532d'):C.dim,
+                  fontFamily:'"Plus Jakarta Sans",sans-serif', transition:'all .15s' }}>{label}</button>
+            ))}
+          </div>
+        )}
+
+        {/* CV panels */}
+        {mobile ? (
+          view==='before' ? <BeforeCV/> : <AfterCV/>
+        ) : (
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16, alignItems:'start' }}>
+            <BeforeCV/>
+            <AfterCV/>
+          </div>
+        )}
+
+        <div style={{ marginTop:20, display:'flex', alignItems:'center', justifyContent:'center', gap:14, padding:'16px 22px', background:'#fff', borderRadius:14, border:`1px solid ${C.hair}`, flexWrap:'wrap' }}>
+          <span style={{ fontSize:20, lineHeight:1 }}>📄📄</span>
+          <span className="sans" style={{ fontSize:14, color:C.ink2, lineHeight:1.5 }}>
+            CV tailored dikirim <strong>bersamaan</strong> dengan laporan evaluasi — 2 PDF ke WhatsApp dalam 1–6 jam.
+          </span>
+          <Btn href={WA} sm primary icon={<IcoWA c="#fff" s={14}/>}>Coba sekarang</Btn>
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
+function SampleCVTailored() {
+  const H = ({ children }) => (
+    <mark style={{ background:'rgba(30,64,175,.13)', color:C.primary, borderRadius:3, padding:'0 3px', fontWeight:600, fontStyle:'normal' }}>{children}</mark>
+  );
+  return (
+    <div style={{ padding:24, color:C.ink }}>
+      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14, padding:'10px 14px', background:C.primarySoft, borderRadius:10, flexWrap:'wrap', gap:8 }}>
+        <div>
+          <div className="mono" style={{ fontSize:9.5, color:C.primary, letterSpacing:'.1em', textTransform:'uppercase' }}>CV Tailored untuk</div>
+          <div className="sans" style={{ fontWeight:700, fontSize:13, color:C.primary }}>Full Stack Developer ERP · PT Manufaktur Nusantara</div>
+        </div>
+        <div style={{ display:'flex', gap:6 }}>
+          <Badge tone="primary">ATS-Optimized</Badge>
+          <Badge tone="accent">Tailored</Badge>
+        </div>
+      </div>
+
+      <div style={{ textAlign:'center', paddingBottom:12, marginBottom:14, borderBottom:`1.5px solid ${C.hair}` }}>
+        <div className="sans" style={{ fontWeight:800, fontSize:19, letterSpacing:'-.02em' }}>Arif Santoso</div>
+        <div className="sans" style={{ fontSize:12, color:C.dim, marginTop:3 }}>Full Stack Developer · Surabaya</div>
+        <div className="mono" style={{ fontSize:11, color:C.dim, marginTop:2 }}>arif.santoso@email.com · linkedin.com/in/arifsantoso · 081234567890</div>
+      </div>
+
+      <div style={{ marginBottom:13 }}>
+        <div className="mono" style={{ fontSize:9.5, color:C.primary, letterSpacing:'.1em', textTransform:'uppercase', borderBottom:`1px solid ${C.primarySoft}`, paddingBottom:4, marginBottom:7 }}>Ringkasan Profesional</div>
+        <p className="sans" style={{ fontSize:12.5, color:C.ink2, lineHeight:1.7 }}>
+          Full Stack Developer dengan 3 tahun pengalaman membangun <H>API-driven web applications</H> dan <H>database-driven architecture</H> di lingkungan produksi. Terbiasa bekerja dengan React.js, Node.js, dan MySQL pada skala ribuan transaksi. Siap beradaptasi ke <H>ekosistem ERP manufaktur</H> dan deliver dari sprint pertama.
+        </p>
+      </div>
+
+      <div style={{ marginBottom:13 }}>
+        <div className="mono" style={{ fontSize:9.5, color:C.primary, letterSpacing:'.1em', textTransform:'uppercase', borderBottom:`1px solid ${C.primarySoft}`, paddingBottom:4, marginBottom:7 }}>Pengalaman</div>
+        <div style={{ marginBottom:9 }}>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline', flexWrap:'wrap', gap:4 }}>
+            <div className="sans" style={{ fontWeight:700, fontSize:13.5 }}>Full Stack Developer</div>
+            <div className="mono" style={{ fontSize:10.5, color:C.dim }}>Jan 2022 – Sekarang</div>
+          </div>
+          <div className="sans" style={{ fontSize:12, color:C.dim, marginBottom:6 }}>PT Solusi Digital Nusantara · Surabaya</div>
+          {[
+            <span>Membangun <H>REST API backend</H> dengan Node.js + Express untuk 3 modul manajemen inventory — menangani 50.000+ transaksi/bulan</span>,
+            <span>Desain <H>relational database schema MySQL</H> multi-cabang; optimasi query turunkan waktu load laporan 40%</span>,
+            <span>Delivery 5 proyek React.js dengan integrasi sistem backend — termasuk <H>modul pelaporan real-time</H> untuk tim operasional</span>,
+          ].map((b, i) => (
+            <div key={i} style={{ display:'flex', gap:8, marginBottom:4, alignItems:'flex-start' }}>
+              <span style={{ color:C.primary, fontSize:11, marginTop:2, flexShrink:0 }}>▸</span>
+              <span className="sans" style={{ fontSize:12, color:C.ink2, lineHeight:1.55 }}>{b}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+        <div>
+          <div className="mono" style={{ fontSize:9.5, color:C.primary, letterSpacing:'.1em', textTransform:'uppercase', borderBottom:`1px solid ${C.primarySoft}`, paddingBottom:4, marginBottom:7 }}>Proyek</div>
+          <div className="sans" style={{ fontWeight:600, fontSize:12.5, marginBottom:2 }}>Inventory Dashboard</div>
+          <p className="sans" style={{ fontSize:11.5, color:C.dim, lineHeight:1.5 }}>React + Node.js + MySQL. <H>Database-driven reporting</H> untuk 8 gudang, export PDF otomatis.</p>
+        </div>
+        <div>
+          <div className="mono" style={{ fontSize:9.5, color:C.primary, letterSpacing:'.1em', textTransform:'uppercase', borderBottom:`1px solid ${C.primarySoft}`, paddingBottom:4, marginBottom:7 }}>Skill Relevan</div>
+          <div style={{ display:'flex', flexWrap:'wrap', gap:4 }}>
+            {[['React.js',true],['Node.js / Express',true],['MySQL / SQL',true],['REST API design',true],['TypeScript',false],['Git / CI-CD',false]].map(([s, match], i) => (
+              <span key={i} className="mono" style={{ padding:'3px 7px', borderRadius:5, fontSize:10.5, background:match?C.primarySoft:C.bgAlt, color:match?C.primary:C.dim, fontWeight:match?600:400 }}>{s}{match?' ✓':''}</span>
+            ))}
+          </div>
+          <div className="sans" style={{ fontSize:10.5, color:C.dim, marginTop:6, fontStyle:'italic' }}>✓ = match persyaratan JD</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Sample() {
   const mobile = useResponsive();
   const [tab, setTab] = useState('eval');
   const tabs = [
     { k:'eval', label:'Evaluasi',        file:'evaluasi-lowongan.pdf'     },
+    { k:'cv',   label:'CV Tailored',     file:'cv-tailored-erp.pdf',   new:true },
     { k:'comp', label:'Perbandingan',    file:'perbandingan-lowongan.pdf' },
     { k:'intv', label:'Interview Ready', file:'interview-intel.pdf'       },
   ];
@@ -570,7 +992,10 @@ function Sample() {
           <div>
             <div style={{ display:'inline-flex', padding:4, borderRadius:999, background:'rgba(255,255,255,.08)', border:'1px solid rgba(255,255,255,.12)', marginBottom:16, flexWrap:'wrap', gap:2 }}>
               {tabs.map(t => (
-                <button key={t.k} onClick={() => setTab(t.k)} className="sans" style={{ border:'none', cursor:'pointer', padding:'8px 16px', borderRadius:999, fontWeight:600, fontSize:13, background:tab===t.k?'#fff':'transparent', color:tab===t.k?C.ink:'rgba(255,255,255,.7)', transition:'background .15s, color .15s', fontFamily:'"Plus Jakarta Sans",system-ui,sans-serif' }}>{t.label}</button>
+                <button key={t.k} onClick={() => setTab(t.k)} className="sans" style={{ border:'none', cursor:'pointer', padding:'8px 16px', borderRadius:999, fontWeight:600, fontSize:13, background:tab===t.k?'#fff':'transparent', color:tab===t.k?C.ink:'rgba(255,255,255,.7)', transition:'background .15s, color .15s', fontFamily:'"Plus Jakarta Sans",system-ui,sans-serif', position:'relative' }}>
+                  {t.label}
+                  {t.new && <span style={{ position:'absolute', top:-2, right:-2, width:8, height:8, borderRadius:4, background:C.accent, boxShadow:'0 0 0 2px #0b1220' }}/>}
+                </button>
               ))}
             </div>
             <div style={{ background:'#fff', borderRadius:14, overflow:'hidden', boxShadow:'0 20px 50px rgba(0,0,0,.2)', border:`1px solid ${C.hair}` }}>
@@ -582,6 +1007,7 @@ function Sample() {
                 <div className="mono" style={{ fontSize:10.5, color:C.dim }}>1 / 4</div>
               </div>
               {tab==='eval' && <SampleEval/>}
+              {tab==='cv'   && <SampleCVTailored/>}
               {tab==='comp' && <SampleComp/>}
               {tab==='intv' && <SampleIntv/>}
               <div style={{ padding:'10px 16px', borderTop:`1px solid ${C.hair}`, display:'flex', justifyContent:'space-between', background:C.bgAlt }}>
@@ -607,10 +1033,11 @@ function Why() {
         </div>
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))', gap:18 }}>
           {WHY.map((w,i) => (
-            <div key={i} style={{ padding:22, background:'#fff', borderRadius:14, border:`1px solid ${C.hair}` }}>
-              <div style={{ width:38, height:38, borderRadius:10, background:C.primarySoft, display:'flex', alignItems:'center', justifyContent:'center', marginBottom:14, color:C.primary, fontWeight:700 }} className="mono">0{i+1}</div>
-              <h3 className="sans" style={{ fontSize:16, fontWeight:700, color:C.ink }}>{w.t}</h3>
-              <p className="sans" style={{ fontSize:13.5, color:C.dim, marginTop:6, lineHeight:1.55 }}>{w.d}</p>
+            <div key={i} style={{ padding:22, background:w.highlight?C.ink:'#fff', borderRadius:14, border:w.highlight?`1px solid ${C.ink}`:`1px solid ${C.hair}`, position:'relative', overflow:'hidden' }}>
+              {w.highlight && <div style={{ position:'absolute', top:-30, right:-30, width:90, height:90, borderRadius:'50%', background:C.accent, opacity:.12, pointerEvents:'none' }}/>}
+              <div style={{ width:38, height:38, borderRadius:10, background:w.highlight?C.accent:C.primarySoft, display:'flex', alignItems:'center', justifyContent:'center', marginBottom:14, color:w.highlight?'#fff':C.primary, fontWeight:700, position:'relative' }} className="mono">0{i+1}</div>
+              <h3 className="sans" style={{ fontSize:16, fontWeight:700, color:w.highlight?'#fff':C.ink }}>{w.t}</h3>
+              <p className="sans" style={{ fontSize:13.5, color:w.highlight?'rgba(255,255,255,.75)':C.dim, marginTop:6, lineHeight:1.55 }}>{w.d}</p>
             </div>
           ))}
         </div>
@@ -746,6 +1173,7 @@ function App() {
         <Hero/>
         <Steps/>
         <Services/>
+        <CVTransform/>
         <Sample/>
         <Why/>
         <Pricing/>
