@@ -181,11 +181,3 @@ Portfolio adalah **landing page satu halaman** (web, bukan PDF). Tidak ada dashb
 5. **Kenapa LamarIn?** — 3–4 poin diferensiasi (AI-powered, multi-source research, hasil dalam jam, privacy)
 6. **Paket harga** — tabel atau kartu paket
 7. **CTA penutup** — tombol order / kontak WA
-
-**Instruksi untuk Claude Design:**
-- Generate dummy screenshot/mockup laporan yang terlihat realistis — tabel, skor, badge legitimacy, dll
-- Dark mode atau light mode — bebas, asal terlihat profesional
-- Warna brand: bebas dipilih yang cocok untuk target market Indonesia (bukan terlalu gelap/hacker, bukan terlalu pastel/cute)
-- Font: bebas, asal bersih dan terbaca di mobile
-- Mobile-first karena mayoritas klien buka via HP
-- Bahasa halaman: **Indonesia**

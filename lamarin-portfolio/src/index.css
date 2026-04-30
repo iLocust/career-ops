@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #ffffff;
+  color: #0f172a;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+.reveal-delay-4 { transition-delay: 0.32s; }
+.reveal-delay-5 { transition-delay: 0.40s; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #ffffff; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* ─── Card spotlight hover (orange tinted glow border) ─── */
+.card-spotlight {
+  transition:
+    box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    transform  0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.25s ease;
+}
+.card-spotlight:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 0 0 1.5px rgba(249, 115, 22, 0.30),
+    0 0 0 5px  rgba(249, 115, 22, 0.06),
+    0 20px 40px rgba(249, 115, 22, 0.09),
+    0 4px  12px rgba(0, 0, 0, 0.05);
+}
+
+.card-spotlight-dark {
+  transition:
+    box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    transform  0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-spotlight-dark:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 0 0 1.5px rgba(249, 115, 22, 0.55),
+    0 0 0 6px  rgba(249, 115, 22, 0.10),
+    0 24px 50px rgba(0, 0, 0, 0.50);
+}
+
+/* ─── PDF mockup paper shadow ─── */
+.paper-shadow {
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.04),
+    0 8px 16px rgba(0,0,0,0.06),
+    0 24px 48px rgba(0,0,0,0.08),
+    0 0 0 1px rgba(0,0,0,0.04);
+}
+
+/* Hero card glow */
+.card-glow {
+  box-shadow:
+    0 0 0 1px rgba(249,115,22,0.12),
+    0 20px 60px rgba(249,115,22,0.18),
+    0 8px 20px rgba(0,0,0,0.35);
+}
